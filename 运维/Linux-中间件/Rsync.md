@@ -20,6 +20,6 @@
 - 实验环境：一台 NFC 服务器，一台 rsync 服务器
 - 在两台服务器上分别创建目录
 
-NFC 服务器：/filesrc 
+-- NFC 服务器：/filesrc 
 
-rsync 服务器：/filedst
+-- rsync 服务器：/filedst
