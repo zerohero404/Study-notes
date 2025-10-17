@@ -88,7 +88,9 @@ PXE (Pre-boot Execution Environment) 是由 Intel 设计的协议，它可以使
 
 - 查看网卡是否支持 PXE
 - TFTP 服务器使用 UDP 协议进行文件传输
+
 **安装过程图解**:
+
  <img width="595" height="427" alt="Linux：集群138" src="https://github.com/user-attachments/assets/b8b3668f-d080-45f0-b496-d4d3edd5341f" />
 
 #### 2.1.2 PXE 服务构建
