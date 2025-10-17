@@ -294,3 +294,22 @@ ssl_cipher "EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AE
 5.cp xxxx.crt 你 nginx 配置文件填写的位置
 6.cp xxxx.key 你 nginx 配置文件填写的位置
 # 将私钥和证书复制到制定位置
+
+### 设置 http 自动跳转 https 功能
+- 打开 nginx 的配置文件，修改上面开启 SSL 的 server 标签修监听端口
+```bash
+server{
+......;
+listen443;
+}
+```
+- 在新增一个 server 标签（利用虚拟主机+rewrite 的功能）
+```bash
+server{
+listen 80;
+server_name www.xxxx.com;
+rewrite ^(.*)$ https://www.xxxx.com permanent;
+root 网页目录所在路径（root 代表就是 nginx 的安装路径）;
+index index.html index.htm;
+}
+```
