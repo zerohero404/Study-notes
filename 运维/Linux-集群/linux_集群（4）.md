@@ -1,4 +1,4 @@
-<img width="470" height="283" alt="image" src="https://github.com/user-attachments/assets/87f533df-7b17-4405-a9b5-480bf3e3c23c" /># Linux：集群（四）
+ Linux：集群（四）
 
 ## 01. SELinux
 
