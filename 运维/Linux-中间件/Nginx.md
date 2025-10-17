@@ -109,6 +109,46 @@ Nginx 有两种工作模式：**master-worker 模式**和**单进程模式**。
 
 ## 配置文件位置
 
-```text
-/<你安装nginx的路径>/nginx/conf/nginx.conf
+- Nginx 的配置文件位置
+**<你安装nginx的路径>/nginx/conf/nginx.conf**
+
+```bash
+user XXX XXX;                            
+# 程序运行用户和组
+worker_processes  1;                     
+# 启动进程，指定 nginx 启动的工作进程数量，建议按照 cpu 数目来制定，一般等于 cpu 核心数目
+error_log /home/wwwlogs/nginx_error.log crit;
+# 全局错误日志
+pid        logs/nginx.pid;
+# 主进程 PID 保存文件
+worker_rlimit_nofile 51200;
+# 文件描述符数量
+events {
+    use epoll;
+    # 使用 epoll 模型，对于 2.6 以上的内核，建议使用 epoll 模型以提高性能
+    worker_connections  1024;
+    # 工作进程的最大了解数量
+}
+
+http{
+    # 网站优化参数
+    server {                                        # 某以网站的具体配置信息
+        listen       80;                            # 监听端口
+        root html;                                  # 网页根目录
+        server_name  localhost;                     # 服务器域名
+        index    index.html;                        # 默认加载页面
+        access_log  logs/host.access.log  main;     # 访问日志保存位置
+        location(.*)\.php${
+            # 用正则匹配具体的访问对象
+        }
+        location{
+            # 跳转规则
+        }
+     }
+     sercer{
+         # 虚拟主机
+     }
+}
+```
+
 
