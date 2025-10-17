@@ -1,9 +1,4 @@
-# Linux：集群（四）
-
-**文章作者**：哈利·波特  
-**发布日期**：2020年11月14日
-
----
+<img width="470" height="283" alt="image" src="https://github.com/user-attachments/assets/87f533df-7b17-4405-a9b5-480bf3e3c23c" /># Linux：集群（四）
 
 ## 01. SELinux
 
@@ -11,6 +6,7 @@
 
 Linux 安全性与 Windows 在不开启防御措施时一致，为 C2 级别。  
 **创造者**：美国国家安全局（NSA，National Security Agency）
+
 
 **Selinux 在 Linux 中的地位变化**：
 
