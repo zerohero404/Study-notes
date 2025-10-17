@@ -165,6 +165,10 @@ yum -y install system-config-kickstart
 - 勾选红框的 FTP，在蓝框填写 FTP 服务器的 IP，因为我吧系统镜像复制到 /var/ftp/pub/dvd 里，所以FTP 目录我填写 pub/dvd,如果你创建的有 FTP 用户和密码就在紫框里填写，匿名登录就不勾选
  <img width="897" height="588" alt="Linux：集群141" src="https://github.com/user-attachments/assets/a56f288e-ec75-41a5-8f81-e15f9f9fbdfc" />
 
+-分区信息主引导记录、分区和磁盘标签按照图上的勾选，布局添加紫框中的添加添加布局，给三个布局：
+/boot 200M – 500M
+swap(交换) 内存大小的两倍
+/ 剩下的所有硬盘空间全给根分区
 
 - 配置 root 密码、FTP 信息、分区信息、SELinux 和防火墙
 - 保存生成的 `ks.cfg` 文件到 `/var/ftp/`
