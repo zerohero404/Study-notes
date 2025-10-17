@@ -152,5 +152,36 @@ http{
 }
 ```
 
+## Nginx 相关实验
 
+### 注意事项
 
+#### 注意配置文件中的结尾都有”;” 每次修改完配置文件都需要重启 nginx 才会生效
+
+```bash
+pkill -HUP nginx
+```
+
+### 实验一：Nginx 的状态统计
+#### 安装 nginx 时将 –with-http_stub_status_module 模块开启 修改 nginx 配置文件（写入要访问的 server 标签中）
+
+```bash
+location /nginx_status{
+stub_status on;
+access_log off;
+}
+```
+#### 客户端访问网址
+http://服务器IP/nginx_status
+“Active connections” 表示当前的活动连接数
+“server accepts handled requests” 表示已经处理的连接信息
+三个数字一次表示已经处理的连接数、成功的 TCP握手次数、已处理的请求数
+
+### 实验二：目录保护
+原理和 Apache 的目录保护原理一样
+在状态统计的 location 中添加
+```bash
+auth_basic "欢迎来到 nginx_status!";
+auth_basic_user_file /usr/local/nginx/html/htppasswd.nginx;
+```
+使用 http 的命令 htpasswd 进行用户密码文件的创建（生成在上面指定的位置）
