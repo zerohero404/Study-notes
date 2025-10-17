@@ -110,6 +110,7 @@ Nginx 有两种工作模式：**master-worker 模式**和**单进程模式**。
 ## 配置文件位置
 
 - Nginx 的配置文件位置
+
 **<你安装nginx的路径>/nginx/conf/nginx.conf**
 
 ```bash
@@ -150,5 +151,6 @@ http{
      }
 }
 ```
+
 
 
