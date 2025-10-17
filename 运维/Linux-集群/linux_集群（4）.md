@@ -57,6 +57,7 @@ restorecon [-Rv] 文件或目录
 #### SELinux 布尔值
 
 - **定义**：布尔值相当于开关，精确控制 SELinux 对某个服务的某个选项的保护，例如 samba 服务。
+ <img width="487" height="220" alt="Linux：集群137" src="https://github.com/user-attachments/assets/e33bb945-20ef-4c86-af60-7daa364fbe6a" />
 
 **命令**：
 ```bash
