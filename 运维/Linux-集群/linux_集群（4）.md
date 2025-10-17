@@ -161,6 +161,7 @@ yum -y install system-config-kickstart
 ```
 - 进入 kisckstart 配置程序( 配置程序未截图的就是不用修改)
  <img width="897" height="587" alt="Linux：集群140" src="https://github.com/user-attachments/assets/a7ff9c1d-5833-4c44-b234-ed8078fb8aa7" />
+
 - 红框是 root 用户密码，蓝框记得勾选
 
 - 配置 root 密码、FTP 信息、分区信息、SELinux 和防火墙
