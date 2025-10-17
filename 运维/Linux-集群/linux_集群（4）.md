@@ -166,9 +166,28 @@ yum -y install system-config-kickstart
  <img width="897" height="588" alt="Linux：集群141" src="https://github.com/user-attachments/assets/a56f288e-ec75-41a5-8f81-e15f9f9fbdfc" />
 
 -分区信息主引导记录、分区和磁盘标签按照图上的勾选，布局添加紫框中的添加添加布局，给三个布局：
-/boot 200M – 500M
-swap(交换) 内存大小的两倍
-/ 剩下的所有硬盘空间全给根分区
+1./boot 200M – 500M
+2.swap(交换) 内存大小的两倍
+3./ 剩下的所有硬盘空间全给根分区
+ <img width="896" height="588" alt="Linux：集群142" src="https://github.com/user-attachments/assets/b55bb7ec-964b-45af-a862-209d7efac44d" />
+ 
+- 红色是 SELinux，蓝色是 iptables,根据自身需求开启，建议关闭
+ <img width="898" height="587" alt="Linux：集群143" src="https://github.com/user-attachments/assets/c12d2a33-a1aa-4df8-988f-4141741c6ee6" />
+
+- 是否需要安装图形界面
+ <img width="902" height="591" alt="Linux：集群144" src="https://github.com/user-attachments/assets/cff135ef-7c04-4888-ab01-6c14b0f9a032" />
+
+- 建议随便勾选其中两个，后期需要什么软件再在配置文件里修改
+ <img width="898" height="589" alt="Linux：集群145" src="https://github.com/user-attachments/assets/95ba5cb4-9d4d-4345-8e76-62ce74083d18" />
+
+- 建议勾选使用解释器，图里填写的解释器是系统自带 shell，在这里你可以填写你的 shell 脚本，后期也在配置文件里修改
+ <img width="898" height="587" alt="Linux：集群146" src="https://github.com/user-attachments/assets/689b1d65-6af7-446a-b813-e008478ec98b" />
+
+- 点击红框中的文件，选择紫框保存
+ <img width="901" height="588" alt="Linux：集群147" src="https://github.com/user-attachments/assets/6148f5a8-9b34-45a3-a989-29bf2566d2a2" />
+
+- 点击紫框的浏览其他文件夹，选择红框中的 root ，再点击蓝框中的保存生成配置文件
+ <img width="898" height="621" alt="Linux：集群148" src="https://github.com/user-attachments/assets/46118298-6794-4beb-b880-ab78526f3354" />
 
 - 配置 root 密码、FTP 信息、分区信息、SELinux 和防火墙
 - 保存生成的 `ks.cfg` 文件到 `/var/ftp/`
