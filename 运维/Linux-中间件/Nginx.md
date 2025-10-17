@@ -172,16 +172,125 @@ access_log off;
 }
 ```
 #### 客户端访问网址
-http://服务器IP/nginx_status
-“Active connections” 表示当前的活动连接数
-“server accepts handled requests” 表示已经处理的连接信息
+http://服务器IP/nginx_status,
+“Active connections” 表示当前的活动连接数,
+“server accepts handled requests” 表示已经处理的连接信息,
 三个数字一次表示已经处理的连接数、成功的 TCP握手次数、已处理的请求数
 
 ### 实验二：目录保护
-原理和 Apache 的目录保护原理一样
+- 原理和 Apache 的目录保护原理一样
 在状态统计的 location 中添加
 ```bash
 auth_basic "欢迎来到 nginx_status!";
-auth_basic_user_file /usr/local/nginx/html/htppasswd.nginx;
+auth_basic_user_file
+/usr/local/nginx/html/htppasswd.nginx;
 ```
-使用 http 的命令 htpasswd 进行用户密码文件的创建（生成在上面指定的位置）
+- 使用 http 的命令 htpasswd 进行用户密码文件的创建（生成在上面指定的位置）
+```bash
+htpasswd -c /usr/local/nginx/html/htppasswd.nginx 用户名
+```
+
+### 实验三：基于 IP 的身份验证（访问控制）
+- 实验三：基于 IP 的身份验证（访问控制）
+
+```bash
+allow 能通过的 IP地址 例如：192.168.88.1;
+deny 不能通过的 IP域 例如：192.168.88.0/24;
+(以上这个设置就是设置只能192.168.88.1这个IP地址访问)
+```
+
+### 实验四：nginx 的虚拟主机（基于域名）
+- 提前准备好两个网站的域名，并且规划好两个网站网页存放目录
+- 在 Nginx 主配置文件中并列编写两个 server 标签，并分别写好各自信息
+- 注意：先要创建虚拟主机的网页根目录
+
+```bash
+server {                                       
+        listen       80;                          
+        root html/web1;                                
+        server_name  www.xxxx.com;                    
+        index     index.html index.php; 
+        include    enable-php.conf                      
+        access_log  logs/web1.access.log  main;    
+}
+server {                                    
+        listen       80;                         
+        root html/web2;                                  
+        server_name   www.xxxx.com;                     
+        index    index.html index.php;  
+        include    enable-php.conf                       
+        access_log  logs/web2.access.log  main;
+        # 注意 这个 main 是日志的格式，需要查看篇日志上方的日志格式设置来设置，也可以根据自己的需求自己写   
+}
+# 这两个 server 不支持 PHP 解析，如果要支持 PHP 解析就在每个 server 里再添加上 http://www.192.168.11.130/?p=1136 里的 location ~ \.php$ 那段，但是里面 root 后面要与 server 里的 root 路径一样
+```
+
+### 实验五：nginx 反向代理
+- 什么是代理和反向代理:
+
+1.代理：找别人代替你去完成一件你完不成的事情，代理的对象就是客户端
+
+2.反向代理：替厂家卖东西的人就叫做反向代理，代理的对象是服务器端
+
+- 在另一台机器上安装 apache，启动并填写测试页面
+- 在 nginx 服务器的配置文件中添加（写在某一网站的 server 标签内）
+```bash
+location / {
+proxy_pass http://apache服务器的IP地址：80;
+}
+```
+重启 nginx，并使用客户端访问测试
+
+ <img width="1015" height="570" alt="Linux：网络服务_43" src="https://github.com/user-attachments/assets/87692bdb-4eaa-4931-9167-9cc2b05ea879" />
+
+### 实验六：负载调度（负责均衡）
+- 负载均衡其实就是将任务分摊到多个操作单元上进行执行，例如 web 服务器、FTP 服务器、企业关键应用服务器和其他关键任务服务器等，从而共同完成工作任务。
+
+使用默认的 r 轮训算法，修改配置文件:
+```bash
+upstream 服务器池名字 {
+server apache1服务器的ip地址;
+server apache1服务器的ip地址;
+}
+```
+
+将刚刚的反向代理标签修改
+```bash
+location / {
+proxy_pass http://上面标签的服务器池名字;
+proxy_set_header Host $host;
+# 重写请求头部，保证网站所有页面都可以访问成功
+}
+```
+
+重启 nginx ，并使用客户端访问测试
+
+ <img width="1016" height="571" alt="Linux：网络服务_44" src="https://github.com/user-attachments/assets/5fc5d342-f8e5-449b-9126-3afb2f2e0c2f" />
+
+### 实验七：nginx 实现 https （证书+rewrite）
+- 安装 nginx 时，需要将 –with-http_ssl_module 模块开启
+- 打开 nginx 配置文件，在对应要进行加密的 server 标签中添加一下内容开启 SSL
+```bash
+server {
+......;
+ssl on;
+ssl_certificate .crt证书存放的路径;
+ssl_certificate_key .key证书存放的路径;
+ssl_session_timeout 5m;
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_prefer_server_ciphers on;
+ssl_cipher "EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5";
+}
+```
+
+- 生成证书和密钥文件
+```bash
+1.注意：这只是实验环境可以使用命令生成测试，生产环境必须要在 https 证书厂商注册
+2.openssl genrsa -out xxxx.key 1024 # 建立服务器私钥，生成 RSA 密钥
+3.openssl req -new -key xxxx.key -out xxxx.csr
+# 需要依次输入国家、地区、组织、email。最重要的是有一个 common name，可以写你的名字或者域名。如果为了 https 申请，这个必须和域名吻合，否则会引起浏览器警报。生成的 csr 文件交给 CA 签名后形成服务器端子机的证书
+4.openssl x509 -req -days 365 -sha256 -in xxxx.csr -signkey xxxx.key -out xxxx.crt
+# 生成签字证书
+5.cp xxxx.crt 你 nginx 配置文件填写的位置
+6.cp xxxx.key 你 nginx 配置文件填写的位置
+# 将私钥和证书复制到制定位置
