@@ -18,8 +18,7 @@
 ***我们一般使用 rsync 来进行单项数据同步，因此我们需要确定一个基准，比如：两台服务器，一台 NFS 作为网站数据服务器（基准服务器），另外一台专门做 rsync 数据备份服务器，我们以此为基础开始我们的实验。***
 - ssh 协议数据同步：将 NFS 服务器数据同步备份到 rsync 服务器
 - 实验环境：一台 NFC 服务器，一台 rsync 服务器
-- 在两台服务器上分别创建目录
-
--- NFC 服务器：/filesrc 
-
--- rsync 服务器：/filedst
+- 在两台服务器上分别创建目录：NFC 服务器：/filesrc 和 rsync 服务器：/filedst
+- 下行同步（下载）
+  1.格式：rsnyc -avz NFC服务器的用户@NFC服务器IP地址:/NFC服务器目录/* /本地目录
+  2.示例：rsnyc -avz root@192.168.88.10: /filesrc/* /filedst
