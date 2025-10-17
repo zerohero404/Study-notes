@@ -157,7 +157,7 @@ chkconfig vsftpd on
 
 ```bash
 yum -y install system-config-kickstart
-system-config-kickstart
+进入服务器图形化执行 system-config-kickstart
 ```
 
 - 配置 root 密码、FTP 信息、分区信息、SELinux 和防火墙
