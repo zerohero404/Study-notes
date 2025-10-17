@@ -20,5 +20,7 @@
 - 实验环境：一台 NFC 服务器，一台 rsync 服务器
 - 在两台服务器上分别创建目录：NFC 服务器：/filesrc 和 rsync 服务器：/filedst
 - 下行同步（下载）
-  1.格式：rsnyc -avz NFC服务器的用户@NFC服务器IP地址:/NFC服务器目录/* /本地目录
-  2.示例：rsnyc -avz root@192.168.88.10: /filesrc/* /filedst
+-    1.格式：rsnyc -avz NFC服务器的用户@NFC服务器IP地址:/NFC服务器目录/* /本地目录
+-    2.示例：rsnyc -avz root@192.168.88.10: /filesrc/* /filedst
+-      a：归档模式，递归并保留对象属性  -v：显示同步过程 -z：在传输文件时进行压缩
+-      
