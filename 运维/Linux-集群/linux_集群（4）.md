@@ -6,7 +6,7 @@
 
 Linux 安全性与 Windows 在不开启防御措施时一致，为 C2 级别。  
 **创造者**：美国国家安全局（NSA，National Security Agency）
-
+<img width="470" height="283" alt="Linux：集群136" src="https://github.com/user-attachments/assets/262eb3fa-f8b8-453a-a7c9-73a2fed84233" />
 
 **Selinux 在 Linux 中的地位变化**：
 
