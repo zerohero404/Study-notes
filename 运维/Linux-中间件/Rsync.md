@@ -19,4 +19,7 @@
 - ssh 协议数据同步：将 NFS 服务器数据同步备份到 rsync 服务器
 - 实验环境：一台 NFC 服务器，一台 rsync 服务器
 - 在两台服务器上分别创建目录
-NFC 服务器：/filesrc rsync 服务器：/filedst
+
+NFC 服务器：/filesrc 
+
+rsync 服务器：/filedst
