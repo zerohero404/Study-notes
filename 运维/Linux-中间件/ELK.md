@@ -30,7 +30,9 @@
 
 - 本次要部署的是 filebeats(被监控端)、logstash+elasticsearch+kibana(监控端)这样的架构。业务请求到达 nginx-server 机器上的 Nginx； Nginx 响应请求，并在 access.log 文件中增加访问记录； FileBeat 搜集新增的日志，通过 LogStash 的 5044 端口上传日志； LogStash 将日志信息通过本机的 9200 端口传入到 ElasticSerach； 搜索日志的用户通过浏览器访问 Kibana，服务器端口是 5601； Kibana 通过 9200 端口访问 ElasticSerach
  <img width="740" height="395" alt="Linux：网络服务_50" src="https://github.com/user-attachments/assets/5898d659-596d-41fb-ac8c-e07df7ba54df" />
+
 1.配置好 yum 源
+  
   ```bash
   cd /etc/yum.repos.d/
   mkdir /yum.back
