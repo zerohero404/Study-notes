@@ -62,9 +62,9 @@
   ```bash
   yum -y install java-1.8*
   ```
-6.监控端配置
+## 监控端配置
   
-  6.1.配置 elasticsearch
+  1.配置 elasticsearch
   ```bash
   新建 elasticsearch 用户并启动（用 elasticsearch 普通用户启动）
   useradd elasticsearch
@@ -74,16 +74,16 @@
   ./bin/elasticsearch -d
   执行此命令之后稍等几分钟
   ```
-  6.2.查看进程是否启动成功
+  2.查看进程是否启动成功
   ```bash
   netstat -antp # 查看是否有 9200 端口启动 如果出现错误可以查看日志 > cat /usr/local/elasticsearch/logs/elasticsearch.log
   curl localhost:9200 # 测试是否能正常访问
 
-  6.3.配置 logstash
+  3.配置 logstash
 
   Logstash 收集 nginx 日志（可以收集很多软件日志），使用 grok 过滤插件解析日志，grok 作为一个 logstash 的过滤插件，支持根据模式解析文本日志行，拆成字段
 
-  6.4.logstash 中 grok 的正则匹配
+  4.logstash 中 grok 的正则匹配
   ```bash
   vim /usr/local/logstash/vendor/bundle/jruby/2.3.0/gems/logstash-patterns-core-4.1.2/patterns/grok-patterns
   ```
@@ -93,7 +93,7 @@
   WZ ([^ ]*)
   NGINXACCESS %{IP:remote_ip} \- \- \[%{HTTPDATE:timestamp}\] “%{WORD:method} %{WZ:request} HTTP/%{NUMBER:httpversion}” %{NUMBER:status} %{NUMBER:bytes} %{QS:referer} %{QS:agent} %{QS:xforward}
   ```
-  6.4.创建 logstash 配置文件
+  4.创建 logstash 配置文件
   ```bash
   vim /usr/local/logstash/default.conf
   ```
@@ -120,7 +120,7 @@
   }
   }
   ```
-  6.5.进入到 /usr/local/logstash 目录下，并执行下列命令
+  5.进入到 /usr/local/logstash 目录下，并执行下列命令
   ```bash
   # 后台启动：
   nohup bin/logstash -f default.conf &
@@ -128,5 +128,27 @@
   netstat -napt|grep 5044
   出现 OpenJDK 64-Bit Server VM warning: If the number of processors is expected to increase from one, then you should configure the number of parallel GC threads appropriately using -XX:ParallelGCThreads=NOpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x00000000c5330000, 986513408, 0) failed; error=’Cannot allocate memory’ (errno=12) 这个错误是因为服务器核心数太少，无法启动。
   ```
-  6.6.配置 Kibana
+  6.配置 Kibana
+  ```bash
+  vim /usr/local/kibana/config/kibana.yml
+  将 #server.host: “localhost” 复制并且取消注释
+  改为
+  server.host: “监控端的IP地址”
+  ```
+  
+  这样其他电脑就能用浏览器访问 Kibana 的服务了
+  7.进入 Kibana 的目录
+  ```bash
+  cd /usr/local/kibana/
+  执行启动命令：
+  nohup bin/kibana &
+  查看端口是否启动：
+  netstat -napt|grep 5601
+  如果启动失败查看启动日志：
+  tail -f nohup.out
+  ```
+  8.在浏览器访问 监控端的IP地址:5601,测试是否部署完成。至此，监控端服务器部署完成
+
+ ## 被监控端配置 
+  1.安装nginx 参考 [nginx安装](https://github.com/zerohero404/Study-notes/blob/main/%E8%BF%90%E7%BB%B4/Linux-%E4%B8%AD%E9%97%B4%E4%BB%B6/Java%20web%20%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md)
   
