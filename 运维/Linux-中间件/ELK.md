@@ -150,5 +150,43 @@
   8.在浏览器访问 监控端的IP地址:5601,测试是否部署完成。至此，监控端服务器部署完成
 
  ## 被监控端配置 
+  
   1.安装nginx 参考 [nginx安装](https://github.com/zerohero404/Study-notes/blob/main/%E8%BF%90%E7%BB%B4/Linux-%E4%B8%AD%E9%97%B4%E4%BB%B6/Java%20web%20%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md)
   
+  2.下载 filebeat 并解压到/usr/local/
+  ```bash
+  cd /usr/local/
+  wget https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.2.3-linux-x86_64.tar.gz
+  tar -xf filebeat-6.2.3-linux-x86_64.tar.gz
+  mv filebeat-6.2.3-linux-x86_64 /usr/local/filebeat
+  ```
+  
+  3.打开文件 /usr/local/filebeat/filebeat.yml
+  
+  vim /usr/local/filebeat/filebeat.yml
+  ```bash
+  enable：false                              #修改为 true
+  paths：/var/log/*.log                  #修改为/var/log/nginx/*.log（nginx的日志位置）
+  output.elasticsearch:                   #将此行和下面的
+  hosts: [“localhost:9200”]   #这两行注释掉
+  #output.logstash:    #将此行和下面的
+  #hosts: [“监控端的IP地址:5044”] #这两行取消注释并修改 IP 地址为监控端的 IP 地址服务器地址
+  ```
+
+  4.切换到 /usr/local/filebeat
+  ```bash
+  cd /usr/local/filebeat
+  后台启动：
+  nohup ./filebeat -e -c filebeat.yml &
+  查看端口是否启动：
+  netstat -napt|grep 5601
+  如果启动失败查看启动日志：
+  tail -f nohup.out
+  ```
+
+  5.访问 Kibana：https://监控端的 IP 地址:5601，点击左上角的 Discover，就可以看到访问日志已经被ELK 搜集了，然后按照下列步骤完成设置
+  ```
+  输入 logstash-*，点击”Next step”
+  选择Time Filter，再点击“Create index pattern”
+  然后可自行创建日志内容查询规则
+  ```
