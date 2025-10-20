@@ -39,6 +39,14 @@
 
 - 非关系型数据库
     
-    1.非关系型数据库：又被称为 NoSQL（Not Only SQL )，意为不仅仅是SQL，是一种轻量、开源、不兼容 SQL 功能的数据库，对 NoSQL 最普遍的定义是“非关联型的”，强调 Key-Value 存储和文档数据库的优点，而不是单纯地反对 RDBMS（关系型数据库管理系统）
+    非关系型数据库：又被称为 NoSQL（Not Only SQL )，意为不仅仅是SQL，是一种轻量、开源、不兼容 SQL 功能的数据库，对 NoSQL 最普遍的定义是“非关联型的”，强调 Key-Value 存储和文档数据库的优点，而不是单纯地反对 RDBMS（关系型数据库管理系统）
 
+- 关系型数据库（mysql）的特征及组成结构介绍
+        
+        关系型数据库发展历程：
+        1.层次模型
 
+ <img width="500" height="148" alt="Linux：网络服务_52" src="https://github.com/user-attachments/assets/a2e29117-832b-45cf-995e-421aad6f8a79" />
+        
+        2.网状模型
+ <img width="261" height="186" alt="Linux：网络服务_53" src="https://github.com/user-attachments/assets/744298b2-af5e-40f1-9b4f-7e590e006262" />
