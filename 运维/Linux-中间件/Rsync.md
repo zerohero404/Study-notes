@@ -114,6 +114,7 @@ netstat -antp | grep :873
  1.inotify 是一个 Linux 内核特性，它监控文件系统，并且及时向专门的应用程序发出相关的事件警告，比如删除、读、写和卸载操作等。要使用 inotify，必须具备一台带有 2.6.13 版本的内核操作系统
  2.inotify 两个监控命令:inotifywait：用于持续监控，实时输出结果（常用）    inotifywatch：用于短期监控，任务完成后再出结果
 - inotify 部署
+ 
  1.yum 安装
   ```bash
   yum install inotify-tools -y
