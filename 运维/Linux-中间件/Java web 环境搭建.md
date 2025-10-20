@@ -174,7 +174,8 @@ vim /usr/local/tomcat-2/conf/server.xml
 ```
 3.修改 startup.sh 和 shutdown.sh 文件
 ```bash
-在两个文件第一行均加入：export CATALINA_HOME=/usr/local/tomcat-2
+在两个文件第一行均加入：
+export CATALINA_HOME=/usr/local/tomcat-2
 vim /usr/local/tomcat-2/bin/startup.sh
 vim /usr/local/tomcat-2/bin/shutdown.sh
 ```
