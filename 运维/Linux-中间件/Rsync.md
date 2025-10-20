@@ -132,6 +132,7 @@ netstat -antp | grep :873
   格式：inotifywait -mrq -e 监控动作1，监控动作2 /监控目录 &（这个 & 代表后台挂起）
   示例：inotifywait -mrq -e create，delete /filesrc &
   -m：始终保持事件监听状态   -r：递归查询目录   q：只打印监控事件的信息
+  ```
   4.监控动作：modify（内容）、create、attrib（权限）、move delete
 - 利用 rsync+inotify 结合脚本实现单向实时同步
  1.vim ~/src.sh
