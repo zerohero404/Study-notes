@@ -75,4 +75,75 @@ rsync –daemon
 netstat -antp | grep :873
 ```
 4.设置映射用户对共享目录有权限（r）
-  
+  ```bash
+ setfacl -m u:nobody:rwx /filesrc
+ ```
+***注意：关闭服务可以使用 kill 命令，但偶尔会造成服务被结束，但会产生进程号匹配文件不被删除的问题，若遇到此类问题可以自己手动删除，再启动则正常（建议自己写一个 rsync 的服务管理脚本）***
+
+5.下行同步（下载）
+  格式：rsnyc -avz rsnyc://NFC服务器的用户@NFC服务器IP地址/共享模块名 /本地目录
+  ```bash
+  示例：rsnyc -avz rsnyc://user1@192.168.88.10/web /filedst
+  ```
+
+
+  拓展：–delete：删除本地比服务器多出来的文件（源地址没有，目标地址有的删掉）
+  ```bash
+  示例：rsnyc -avz –delete rsnyc://user1@192.168.88.10/web /filedst
+  ```
+6.上行同步（上传）
+  格式：rsnyc -avz /本地目录 rsnyc://NFC服务器的用户@NFC服务器IP地址/共享模块名
+  ```bash
+  示例：rsnyc -avz /filedst rsnyc://user1@192.168.88.10/web
+  ```
+
+
+ 拓展：rsnyc 协议的免密码可以借助一个环境变量实现
+ ```bash
+ 在rsync 服务器上
+ export RSYNC_PASSWORD=NFC服务器的用户密码
+ ```
+# 配置 rsync+inotify 实时同步
+- 定期同步的缺点
+ 1.执行备份的时间固定，延期明显，实时性差
+ 2.当同步源长期不变化时，密集的定期任务是不必要的（浪费资源）
+- 实时同步的优点
+ 1.一旦同步源出现变化，立即启动备份，实时性好
+ 2.只要同步源无变化，则不执行备份，节省资源
+- inotify 简介
+ 1.inotify 是一个 Linux 内核特性，它监控文件系统，并且及时向专门的应用程序发出相关的事件警告，比如删除、读、写和卸载操作等。要使用 inotify，必须具备一台带有 2.6.13 版本的内核操作系统
+ 2.inotify 两个监控命令:inotifywait：用于持续监控，实时输出结果（常用）    inotifywatch：用于短期监控，任务完成后再出结果
+- inotify 部署
+ 1.yum 安装
+  ```bash
+  yum install inotify-tools -y
+  ```
+ 2.源码包安装
+  ```bash
+  首先安装编译工具：yum -y install gcc*
+  wget https://nchc.dl.sourceforge.net/project/inotify-tools/inotify-tools/3.13/inotify-tools-3.13.tar.gz
+  tar -xf inotify-tools-3.13.tar.gz
+  cd inotify-tools-3.13
+  ./configure && make && make install
+  ```
+  3.inotifywait 命令格式
+  ```bash
+  格式：inotifywait -mrq -e 监控动作1，监控动作2 /监控目录 &（这个 & 代表后台挂起）
+  示例：inotifywait -mrq -e create，delete /filesrc &
+  -m：始终保持事件监听状态   -r：递归查询目录   q：只打印监控事件的信息
+  4.监控动作：modify（内容）、create、attrib（权限）、move delete
+- 利用 rsync+inotify 结合脚本实现单向实时同步
+ 1.vim ~/src.sh
+ ```bash
+ #!/bin/bash
+a="inotifywait -mrq -e create，delete,modify /filesrc"
+b="rsnyc -avz /filesrc/* user1@192.168.88.10:/filedst"
+$a | while read directory event file
+# while 判断是否接收到监控记录
+do 
+    $b
+done
+```
+ 2.bash ~/src.sh & (执行 src.sh 脚本并且放在后台)
+ 3.注意：用户登录时要求免密码验证
+ <img width="828" height="168" alt="Linux：网络服务_46" src="https://github.com/user-attachments/assets/d7645e3c-b522-4a1c-a61f-d5f487cdea43" />
