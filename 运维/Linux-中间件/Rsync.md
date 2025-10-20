@@ -160,8 +160,14 @@ done
   2.如若用用 root 来实现登录的话，生成密钥对，以便免密码验证
   3.准备好 inotify 和 unison 的软件包
 - 安装步骤
+  
+  
   1.inotify-tools 安装
+   
+   
    1.1.yum 安装：yum install inotify-tools -y
+  
+   
    1.2.源码包安装
    ```bash
    首先安装编译工具：yum -y install gcc*
