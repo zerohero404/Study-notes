@@ -135,9 +135,10 @@ netstat -antp | grep :873
   ```
   4.监控动作：modify（内容）、create、attrib（权限）、move delete
 - 利用 rsync+inotify 结合脚本实现单向实时同步
+ 
  1.vim ~/src.sh
  ```bash
- #!/bin/bash
+#!/bin/bash
 a="inotifywait -mrq -e create，delete,modify /filesrc"
 b="rsnyc -avz /filesrc/* user1@192.168.88.10:/filedst"
 $a | while read directory event file
