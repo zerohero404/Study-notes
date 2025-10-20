@@ -46,9 +46,11 @@
   -关系型数据库发展历程：
         
         1.层次模型
-<img width="500" height="148" alt="Linux：网络服务_52" src="https://github.com/user-attachments/assets/a2e29117-832b-45cf-995e-421aad6f8a79" />
+        <img width="500" height="148" alt="Linux：网络服务_52" src="https://github.com/user-attachments/assets/a2e29117-832b-45cf-995e-421aad6f8a79" />
         2.网状模型
- <img width="261" height="186" alt="Linux：网络服务_53" src="https://github.com/user-attachments/assets/744298b2-af5e-40f1-9b4f-7e590e006262" />
+        <img width="261" height="186" alt="Linux：网络服务_53" src="https://github.com/user-attachments/assets/744298b2-af5e-40f1-9b4f-7e590e006262" />
+ 
+ 
  - 关系模型(Relation)
 
     1.关系模型以二维表结构来表示实体与实体之间的联系，关系模型的数据结构是一个“二维表框架”组成的集合。每个二维表又可称为关系。在关系模型中，操作的对象和结果都是二维表。
@@ -56,6 +58,7 @@
     3.在关系模型中基本数据结构就是二维表，不用像层次或网状那样的链接指针。记录之间的联系是通过不同关系中同名属性来体现的。例如，要查找“刘晋”老师所上的课程，可以先在教师关系中根据姓名找到教师编号“1984030”，然后在课程关系中找到“1984030”任课教师编号对应的课程名即可。通过上述查询过程，同名属性教师编号起到了连接两个关系的纽带作用。由此可见，关系模型中的各个关系模式不应当是孤立的，也不是随意拼凑的一堆二维表，它必须满足相应的要求。
 
 <img width="261" height="186" alt="Linux：网络服务_53" src="https://github.com/user-attachments/assets/2464374b-cca0-4bc1-8acf-647f6a131f2a" />
+
 
 
 
