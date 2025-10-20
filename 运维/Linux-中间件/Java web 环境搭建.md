@@ -134,4 +134,56 @@ useradd -r -s /sbin/nologin nginx
 ```bash
 pkill -HUP nginx
 ```
-7.输入 nginx 的地址，打开为 tomcat 就是tomcat 部署的网站
+7.输入 nginx 的地址，打开为 tomcat 就部署成功了
+
+## 部署 JAVA 的 WAR 包
+1.在 /usr/local/tomcat/conf/server.xml 配置文件中的 server 区域中添加标红内容
+```bash
+<Host name="localhost" appBase="webapps" unpackWARs="true" autoDeploy="true">
+<Context path="" docBase="项目包的名字.war" debug="0" privileged="true"/>
+```
+2.将 war 包拷贝到 webapps 目录中
+```bash
+cp -a test.war /usr/local/tomcat/webapps/
+```
+3.删除网站的 ROOT 目录
+```bash
+rm -rf /usr/local/tomcat/ROOT
+```
+4.重启 tomcat 服务
+```bash
+/usr/local/tomcat/bin/catalina.sh  stop
+/usr/local/tomcat/bin/catalina.sh  start
+```
+5.使用客户端浏览访问 Nginx 服务的端口进行测试
+6.注意:原本的 tomcat 使用 8080 端口进行访问，也可以将端口修改为 80 使用 IP 直接访问，修改 /usr/local/tomcat/conf/server.xml 配置中的 8080 改变为 80（切记不要和其他 web 服务器冲突）
+
+## 创建多个 tomcat 实例
+1.拷贝现有的 Tomcat 到另外一个目录，重新命名如：tomcat-2
+```bash
+mv /usr/local/tomcat /usr/local/tomcat-2
+将 tomcat-2 的 logs 目录中的所有文件删除
+rm -rf /usr/local/tomcat-2/logs/*
+```
+2.修改 Tomcat-2 中的/conf/server.xml 文件，把 shutdown 和 Connector 端口修改成另外的数值， 关闭端口修改为 8006，连接端口修改为 8090
+```bash
+vim /usr/local/tomcat-2/conf/server.xml
+
+<Server port=”8006” shutdown=”SHUTDOWN”>
+<Connector port="你想要的端口号" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443"/>
+```
+3.修改 startup.sh 和 shutdown.sh 文件
+```bash
+在两个文件第一行均加入：export CATALINA_HOME=/usr/local/tomcat-2
+vim /usr/local/tomcat-2/bin/startup.sh
+vim /usr/local/tomcat-2/bin/shutdown.sh
+```
+4.然后在 nginx 配置文件里加入 tomcat-2 的 IP 地址和端口号
+```bash
+vim /usr/local/nginx/conf/nginx.conf
+
+upstream tomcat {
+server tomcat服务器IP地址:8080;
+server tomcat-2服务器IP地址:你设置tomcat-2的端口号;
+｝
+```
