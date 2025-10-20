@@ -24,3 +24,55 @@
 -    2.示例：rsnyc -avz root@192.168.88.10: /filesrc/* /filedst
 -    -a:归档模式，递归并保留对象属性  -v：显示同步过程 -z：在传输文件时进行压缩
      
+## 上行同步（上传）
+- 格式：rsnyc -avz /本地目录/* NFC服务器的用户@NFC服务器IP地址:/NFC服务器目录/
+- 示例：rsnyc -avz /filedst/* root@192.168.88.10: /filesrc/
+- 注意：是在实验中使用 root 用户可以，但是生产环境尽量使用 NFC 服务器单独创建的普通用户，减少权限溢出
+```bash
+useradd xxxxx
+passwd xxxxx
+setfacl -m u:xxxxx:rwx /filesrc
+```
+- 如果要实现免密数据同步，只需要做好 ssh 密钥对登录即可
+1.NFC 服务器操作
+```bash
+ssh-keygen -t rsa -b 2048 （然后一直按回车）
+ssh-copy-id rsnyc服务器用户@rsny服务器地址
+2.rsnyc 服务器操作
+```bash
+ssh-keygen -t rsa -b 2048(然后一直按回车)
+ssh-copy-id NFC服务器用户@NFC服务器IP地址
+```
+- rsync 协议数据同步：将 NFS 服务器数据同步备份到 rsync 服务器
+实验环境：一台服务器，一台客户端
+1.在两台服务器上分别创建目录
+  1.1.NFC 服务器：/filesrc
+  1.2.rsync 服务器：/filedst
+2.搭建 rsync 服务（仅需要在 NFC 服务器上搭建)
+  2.1.创建主配置文件（/etc/rsyncd.conf）
+  ```bash
+  address = NFC 服务器 IP 地址 #rsync 服务绑定IP
+  port 873 # 默认服务端口 873
+  log file = /var/log/rsyncd.log # 日志文件位置
+  pid file = /var/run/rsyncd.pid # 进程号文件位置
+  [web] # 共享名：是用来写在url上的
+  comment = web directory backup # 共享描述话语
+  path= /filesrc # 实际共享目录
+  read only =on # 是否仅允许读取
+  dont compress = *.gz *.bz2 # 哪些文件类型不进行压缩
+  auth users = user1 # 登录用户名（非系统用户，需要自行创建）
+  secrets file = /etc/rsyncd_users.db # 认证所需账户密码文件（需自行创建-同上）
+  2.2.创建认证所需账户密码文件
+  ```bash
+  vim /etc/rsyncd_users.db
+  # 写入主配置文件中的登录用户名和密码
+  user1:123456
+  chmod 600 /etc/rsyncd_users.db ( 必须修改权限，否则登录报错)
+  ```
+3.启动服务
+```bash
+rsync –daemon
+netstat -antp | grep :873
+```
+4.设置映射用户对共享目录有权限（r）
+  
