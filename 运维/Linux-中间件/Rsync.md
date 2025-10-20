@@ -103,7 +103,7 @@ netstat -antp | grep :873
  在rsync 服务器上
  export RSYNC_PASSWORD=NFC服务器的用户密码
  ```
-# 配置 rsync+inotify 实时同步
+## 配置 rsync+inotify 实时同步
 - 定期同步的缺点
  1.执行备份的时间固定，延期明显，实时性差
  2.当同步源长期不变化时，密集的定期任务是不必要的（浪费资源）
@@ -150,3 +150,64 @@ done
  2.bash ~/src.sh & (执行 src.sh 脚本并且放在后台)
  3.注意：用户登录时要求免密码验证
  <img width="828" height="168" alt="Linux：网络服务_46" src="https://github.com/user-attachments/assets/d7645e3c-b522-4a1c-a61f-d5f487cdea43" />
+
+
+ # 配置 unison+inotify 实现双向实时同步
+ 
+ rsync 在单向同步上支持的非常好，且效率很高，但是在双向同步支持较差；unison 则是双向同步的优秀工具，但是缺点是同步效率低
+ - 环境要求
+  1.准备好同步所需的两个目录
+  2.如若用用 root 来实现登录的话，生成密钥对，以便免密码验证
+  3.准备好 inotify 和 unison 的软件包
+- 安装步骤
+  1.inotify-tools 安装
+   1.1.yum 安装：yum install inotify-tools -y
+   1.2.源码包安装
+   ```bash
+   首先安装编译工具：yum -y install gcc*
+   wget https://nchc.dl.sourceforge.net/project/inotify-tools/inotify-tools/3.13/inotify-tools-3.13.tar.gz
+   tar -xf inotify-tools-3.13.tar.gz
+   cd inotify-tools-3.13
+   ./configure && make && make install
+   ```
+  2.ocaml 安装
+  ```bash
+  yum install ocaml
+  ```
+  3.unison 安装
+  ```bash
+  yum install -y unison
+  unison -version # 查看版本号
+  注意：同样的操作在服务器端也做一遍，两个服务器 unison版本一定要一样
+  ```
+- 配置脚本
+注意，双向自动同步，监控目录和数据同步时，源目录不能使用*通配符传输，否则会变成死循环
+然后将两个脚本运行挂在后台
+```bash
+# filesrc 服务器端脚本
+
+#!/bin/bash
+a="inotifywait -mrq -e create，delete,modify /filesrc"
+b="/usr/bin/unison -batch /filesrc/ user1@192.168.88.20:/filedst"
+# -batch:批处理
+$a | while read directory event file
+# while 判断是否接收到监控记录
+do 
+    $b
+done
+```
+
+
+```bash
+#  服务器端脚本
+
+#!/bin/bash
+a="inotifywait -mrq -e create，delete,modify /filedst"
+b="/usr/bin/unison -batch /filedst/ user1@192.168.88.10:/filesrc"
+# -batch:批处理
+$a | while read directory event file
+# while 判断是否接收到监控记录
+do 
+    $b
+done
+```
