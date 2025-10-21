@@ -254,6 +254,8 @@
             mysql>show grants for 其他用户@’%’；
 
     5.备份和还原
+        
+        ```bash
         mysqldump 备份
             备份
             mysqldump -u 用户名 -p 数据库名 > /备份路径/备份文件名（备份整个数据库）
@@ -265,4 +267,47 @@
             mysql 数据库 < 备份文件
             注意：还原时，若导入的是某表，请指定导入到哪一个库中
         mysqlhotcopy 备份
-        
+            备份
+            mysqlhotcopy –flushlog -u=’用户’ -p=’密码’ –regexp=正则 备份目录
+            还原
+            cp -a 备份目录 数据目录（/var/lib/mysql）
+        mysqldump 和 mysqlhotcopy 示例
+             mysqldump
+                 把数据库 aa 备份到/root 目录下
+                 mysqldump –uroot –p aa > ~/aa.sql
+                 模拟数据库 aa 丢失（删除数据库 aa）
+                     mysql -uroot -p 密码
+                     mysql>drop database aa;
+                通过 aa.sql 文件还原（指定导入到哪个库中）
+                    mysql –uroot –p 库名 < aa.sql
+                备份多个数据库（–databases）
+                    mysqldump –uroot –p –databases aa test > abc.sql
+                    还原（先模拟丢失）
+                        mysql –uroot –p < abc.sql
+            mysqlhotcopy
+                备份有规则的数据库
+                    mysql -uroot -p密码
+                    mysql>create database a1; # 连续创建三个a 开头的数据库
+                    mysqlhotcopy –flushlog –u=‘root’ –p=‘456’ –regexp=^a # 备份以 a 开头的数据库
+                还原（先模拟丢失）
+                    mysql -uroot -p 密码
+                    mysql>drop database a1;
+                    cp –a /你执行备份所在的路径 /var/lib/mysql/ # 复制产生的文件到数据库目录下
+            mysql-binlog 日志备份
+                二进制日志（log-bin 日志）：所有对数据库状态更改的操作（create、drop、update 等）
+                修改 my.cnf 配置文件开启 binlog 日志记录功能
+                    vim /etc/my.cnf 添加下面选项
+                    log-bin=mysql-bin #启动二进制日志
+                按时间还原
+                –start-datetime
+                –stop-datetime
+                格式
+                    mysqlbinlog –start-datetime ‘YY-MM-DD HH:MM:SS’ –stop-datetime ‘YY-MM-DDHH:MM:SS’ 二进制日志 | mysql -uroot -p
+                按文件大小还原
+                    –start-position
+                    –stop-position
+                mysql-binlog 日志备份示例
+                    开启二进制日志
+                     <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
+
+
