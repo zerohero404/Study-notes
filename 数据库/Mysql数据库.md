@@ -131,6 +131,7 @@
     MySQL-Server：MySQL 服务器端程序
 
     1.源代编译安装
+    
     编译工具：configure、cmake、make
       数据库常用的配置选项：
       ```bash
@@ -149,4 +150,5 @@
       -DDEFAULT_CHARSET=utf8——–默认编码机制
       -DWITH_DEBUG=0 DEBUG——–DEBUG 功能设置
       ```
+
 
