@@ -252,10 +252,17 @@
             mysql>revoke drop,delete on 库名.表名 from abc@’%’； # 取消删除权限（登录 abc 测试）
             mysql>show grants for abc@’%’； # 查看指定用户的授权
             mysql>show grants for 其他用户@’%’；
-        备份和还原
-            
 
-
-
-
-
+    5.备份和还原
+        mysqldump 备份
+            备份
+            mysqldump -u 用户名 -p 数据库名 > /备份路径/备份文件名（备份整个数据库）
+            mysqldump -u 用户名 -p 数据库名 表名 > /备份路径/备份文件名（备份数据表）
+            备份多个库：–databases 库 1，库 2
+            备份所有库：–all-databases
+            备份多个表：库名 表 1 表 2
+            还原
+            mysql 数据库 < 备份文件
+            注意：还原时，若导入的是某表，请指定导入到哪一个库中
+        mysqlhotcopy 备份
+        
