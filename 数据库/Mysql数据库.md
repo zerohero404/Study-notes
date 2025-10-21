@@ -178,6 +178,7 @@
         ctrl+d
         ```
 4.MySQL 管理命令
+        
         ```bash
         创建登录用户: mysql>create user 用户名@’%’ identified by ‘密码’;  # %:指任意的远程终端
         测试用户登录: mysql -u用户名 -p密码 -h mysql服务器IP地址
@@ -205,6 +206,7 @@
             ->primary key (id)); # 设置 id 为主键
             mysql>describe 表名; # 查看表结构（字段）
         ```
+
 
 
 
