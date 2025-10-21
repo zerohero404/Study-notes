@@ -253,9 +253,8 @@
             mysql>show grants for abc@’%’； # 查看指定用户的授权
             mysql>show grants for 其他用户@’%’；
 
--    5.备份和还原
-
--        5.1mysqldump 备份
+  5.备份和还原
+        5.1mysqldump 备份
             备份
             mysqldump -u 用户名 -p 数据库名 > /备份路径/备份文件名（备份整个数据库）
             mysqldump -u 用户名 -p 数据库名 表名 > /备份路径/备份文件名（备份数据表）
@@ -308,6 +307,7 @@
                 mysql-binlog 日志备份示例
                     开启二进制日志
  <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
+
 
 
 
