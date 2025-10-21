@@ -166,7 +166,6 @@
 
     3.MySQL 登录及退出命令
         
-        ```bash
         设置密码：mysqladmin  -uroot password 密码
         登录：mysql -u 用户名 -p 密码 -P 端口 -S 套接字文件
         -p 用户密码 
@@ -176,10 +175,9 @@
         退出:
         exit
         ctrl+d
-        ```
+
     4.MySQL 管理命令
         
-        ```bash
         创建登录用户: mysql>create user 用户名@’%’ identified by ‘密码’;  # %:指任意的远程终端
         测试用户登录: mysql -u用户名 -p密码 -h mysql服务器IP地址
         用户为自己更改密码: mysql>set password=password(‘新密码’);
@@ -205,7 +203,7 @@
             ->age int not null default 0, # 字段默认值为 0
             ->primary key (id)); # 设置 id 为主键
             mysql>describe 表名; # 查看表结构（字段）
-        ```
+
 
 
 
