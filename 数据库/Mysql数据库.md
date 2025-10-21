@@ -45,7 +45,7 @@
         
   -关系型数据库发展历程：
     
-1.层次模型
+1.层次模型<br>
 <img width="500" height="148" alt="Linux：网络服务_52" src="https://github.com/user-attachments/assets/a2e29117-832b-45cf-995e-421aad6f8a79" /> <br>
 
 2.网状模型<br>
@@ -304,6 +304,7 @@
                 mysql-binlog 日志备份示例
                     开启二进制日志<br>
  <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
+
 
 
 
