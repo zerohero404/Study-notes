@@ -133,7 +133,9 @@
     1.源代编译安装
     
     编译工具：configure、cmake、make
+      
       数据库常用的配置选项：
+      
       ```bash
       -DCMAKE_INSTALL_PREFIX=/PREFIX——–指定安装路径（默认的就是/usr/local/mysql）
       -DMYSQL_DATADIR=/data/mysql——–mysql 的数据文件路径
@@ -150,5 +152,6 @@
       -DDEFAULT_CHARSET=utf8——–默认编码机制
       -DWITH_DEBUG=0 DEBUG——–DEBUG 功能设置
       ```
+
 
 
