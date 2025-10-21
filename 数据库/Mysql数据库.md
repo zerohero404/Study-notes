@@ -203,7 +203,57 @@
             ->age int not null default 0, # 字段默认值为 0
             ->primary key (id)); # 设置 id 为主键
             mysql>describe 表名; # 查看表结构（字段）
-
+        插入数据
+            先选择要插入数据表所在的库
+            mysql>insert into 表名 (id,name,age) values (1,’zhangsan’,21)； # 指明插入字段和数据
+            mysqll>select * from 表名; # 查询表的所有数据
+            mysql>insert into 表名 values (2,’lisi’,20)； # 按顺序插入指定字段
+            mysql>insert into 表名 values (3,’wangwu’)； # 未声明年龄
+            mysql>insert into 表名 values (4,’zhao’,19)，(5,’sun’,25)； #插入多条数据
+        将表 a2 的数据复制到表 b1
+            mysql>select * from a1; # 查询表的所有数据
+            mysql>insert into a1 (id,name) select id,name from a2; # 查询 a2 值，并写入到 a1
+            mysql>select * from a1;
+        删除数据库
+            mysql>drop database 库名;
+            mysql>show databases;
+        删除数据表
+            mysql>drop table 表名;
+            mysql>show table;
+        删除表里的数据记录
+            mysql>delete from 表名 where id=5; # 删除 id=5 的记录
+            mysql>delete from 表名 where between 23 and 25;    #删除年龄在 23-25 之间的
+        注意：库和表的删除用 drop,记录删除用 delete
+        修改表中的数据
+            mysql>update 表名 set age=21 where id=3;
+        修改数据表的名称
+            mysql>alter table 旧表名 rename 新表名;
+        修改数据表的字段类型
+            mysql>describe 表名;
+            mysql>alter table 表名 modify name char(50); # 将表里的 name 字段类型该为char(50)
+            describe 表名;
+        修改数据表的字段类型详情
+            mysql>describe 表名;
+            mysql>alter table 表名 change name username char(50) not null default ‘ ‘; # 将表里的 name 字段改名为 username，字段类型char(50)，默认为空
+            mysql>describe 表名;
+        添加字段
+            mysql>describe 表名;
+            mysql>alter table 表名 add time datetime; # 给表添加一个 time 字段，字段类型是 datetime
+            mysql>describe 表名; # 添加位置默认在末尾
+            mysql>alter table 表名 add birthday year first; # 将字段 birthday，字段类型 year 添加表的字段到第一列
+            mysql>alter table 表名 add sex nchar(1) after id; # 将字段 sex ，字段类型 nchar(1) 添加到表的指定字段 id 后
+        删除字段
+            mysql>alter table 表名 drop 字段名;
+        Mysql 用户授权
+            mysql>select user from mysql.user;
+            mysql>grant all on 库名.表名 to 用户名@’%’；# 给已存在用户授权
+            mysql>grant all on 库名.表名 to 用户名@’%’ identified by ‘密码’; # 创建用户并授权
+        取消 abc 用户的删除库、表、表中数据的权限
+            mysql>revoke drop,delete on 库名.表名 from abc@’%’； # 取消删除权限（登录 abc 测试）
+            mysql>show grants for abc@’%’； # 查看指定用户的授权
+            mysql>show grants for 其他用户@’%’；
+        备份和还原
+            
 
 
 
