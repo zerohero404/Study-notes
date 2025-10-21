@@ -44,8 +44,10 @@
 - 关系型数据库（mysql）的特征及组成结构介绍
         
   -关系型数据库发展历程：
+    
     1.层次模型
 <img width="500" height="148" alt="Linux：网络服务_52" src="https://github.com/user-attachments/assets/a2e29117-832b-45cf-995e-421aad6f8a79" />
+    
     2.网状模型
 <img width="261" height="186" alt="Linux：网络服务_53" src="https://github.com/user-attachments/assets/744298b2-af5e-40f1-9b4f-7e590e006262" />
  
@@ -161,6 +163,7 @@
         yum 安装默认数据目录 ：/var/lib/mysql
         套接字文件：/var/lib/mysql/mysql.sock
         进程文件：/var/run/mysqld/mysqld.pid # 当意外关闭数据库时，再开启时假如开启不了，找到这个，删除再启动
+
 
 
 
