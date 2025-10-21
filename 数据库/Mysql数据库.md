@@ -124,3 +124,30 @@
 
     4.MySQL Cluster CGE 高级集群版，需付费
 
+- MySQL 安装部署
+    
+    MySQL：MySQL 客户端程序
+   
+    MySQL-Server：MySQL 服务器端程序
+
+    1.源代编译安装
+        
+      编译工具：configure、cmake、make
+        
+      数据库常用的配置选项：
+      ```bash
+      -DCMAKE_INSTALL_PREFIX=/PREFIX——–指定安装路径（默认的就是/usr/local/mysql）
+      -DMYSQL_DATADIR=/data/mysql——–mysql 的数据文件路径
+      -DSYSCONFDIR=/etc——–配置文件路径
+      -DWITH_INNOBASE_STORAGE_ENGINE=1——–使用INNOBASE 存储引擎
+      -DWITH_READLINE=1——–支持批量导入 mysql 数据
+      -DWITH_SSL=system——–mysql 支持 ssl
+      -DWITH_ZLIB=system——–支持压缩存储
+      -DMYSQL_TCP_PORT=3306——–默认端口 3306
+      -DENABLED_LOCAL_INFILE=1——–启用加载本地数据
+      -DMYSQL_USER=mysql——–指定 mysql 运行用户
+      -DMYSQL_UNIX_ADDR=/tmp/mysql.sock——–默认套接字文件路径
+      -DEXTRA_CHARSETS=all——–是否支持额外的字符集
+      -DDEFAULT_CHARSET=utf8——–默认编码机制
+      -DWITH_DEBUG=0 DEBUG——–DEBUG 功能设置
+      ```
