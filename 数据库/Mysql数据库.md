@@ -153,5 +153,15 @@
       -DWITH_DEBUG=0 DEBUG——–DEBUG 功能设置
       ```
 
+    2.常见资料
+
+        服务：mysqld
+        端口：3306
+        主配置文件：/etc/my.cnf
+        初始化脚本：mysql_install_db
+        启动命令：mysqld_safe
+        yum 安装默认数据目录 ：/var/lib/mysql
+        套接字文件：/var/lib/mysql/mysql.sock
+        进程文件：/var/run/mysqld/mysqld.pid # 当意外关闭数据库时，再开启时假如开启不了，找到这个，删除再启动
 
 
