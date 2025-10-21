@@ -164,9 +164,44 @@
         套接字文件：/var/lib/mysql/mysql.sock
         进程文件：/var/run/mysqld/mysqld.pid # 当意外关闭数据库时，再开启时假如开启不了，找到这个，删除再启动
 
+    3.MySQL 登录及退出命令
+        
+        设置密码：mysqladmin  -uroot password 密码
+        登录：mysql -u 用户名 -p 密码 -P 端口 -S 套接字文件
+        -p 用户密码 
+        -h 登陆位置（主机名或 ip 地址）
+        -P 端口号（3306 改了就不是了）
+        -S 套接字文件（/var/lib/mysql/mysql.sock）
+        退出:
+        exit
+        ctrl+d
 
+      4.MySQL 管理命令
 
-
-
-
-
+        ```bash
+        创建登录用户: mysql>create user 用户名@’%’ identified by ‘密码’;  # %:指任意的远程终端
+        测试用户登录: mysql -u用户名 -p密码 -h mysql服务器IP地址
+        用户为自己更改密码: mysql>set password=password(‘新密码’);
+        root 用户为其他用户找回密码: mysql>set password for 用户ming@’%’=password(‘新密码’);
+        root 找回自己的密码并修改: 
+            关闭数据库，修改主配置文件（/etc/my.cnf）添加：skip-grant-tables
+            vim /etc/my.cnf
+            在 symbolic-links=0 下面添加 skip-grant-tables
+            启动数据库，空密码登录并修改密码
+            mysql -uroot
+            mysql>update mysql.user set password=password(‘新密码’) where user=’root’;
+            删除 skip-grant-tables,重启数据库验证新密码
+        创建查询数据库
+            mysql>create database 库名; 创建数据库
+            mysql>show databases 库名; 查看数据库
+        创建数据表
+            mysql>use 库名; 选择要使用的数据库
+            mysql>create table 表名(id int ,name char(30)); 创建表，并添加 id 和 name 字段以及类型
+            mysql>describe 表名; 查看表结构（字段）
+        创建复杂点的数据表
+            mysql>create table 表名 (->id int unsigned not null auto_increment, # 字段要求为正数、且自增长、主键
+            ->name char(30) not null default ‘ ‘,  # 字符型长度 30 字节，默认值为空格
+            ->age int not null default 0, # 字段默认值为 0
+            ->primary key (id)); # 设置 id 为主键
+            mysql>describe 表名; # 查看表结构（字段）
+            
