@@ -287,7 +287,7 @@
                     mysql>drop database a1;
                     cp –a /你执行备份所在的路径 /var/lib/mysql/ # 复制产生的文件到数据库目录下
 
-  mysql-binlog 日志备份
+        5.2mysql-binlog 日志备份
                 二进制日志（log-bin 日志）：所有对数据库状态更改的操作（create、drop、update 等）
                 修改 my.cnf 配置文件开启 binlog 日志记录功能
                     vim /etc/my.cnf 添加下面选项
@@ -305,6 +305,7 @@
                     
                     开启二进制日志
  <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
+
 
 
 
