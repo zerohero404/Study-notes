@@ -308,14 +308,12 @@
     5.3mysql-binlog 日志备份示例<br>
         开启二进制日志
  <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
-        
         查看二进制日志文件
- <img width="679" height="135" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/d46ed47a-05a2-4e4b-9a0e-7dea6d9cf2f6" />
-
+ <img width="679" height="135" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/d46ed47a-05a2-4e4b-9a0e-7dea6d9cf2f6" /><br>
         按时间还原(如果数据库中的 bb 库被删，需要还原)
- <img width="470" height="218" alt="Linux：网络服务_56" src="https://github.com/user-attachments/assets/72a4aff6-c930-4fc7-8439-1f960428c69a" />
-        
+ <img width="470" height="218" alt="Linux：网络服务_56" src="https://github.com/user-attachments/assets/72a4aff6-c930-4fc7-8439-1f960428c69a" /><br>
         查看二进制日志内容:mysqlbinlog 日志文件名字
- <img width="674" height="246" alt="Linux：网络服务_57" src="https://github.com/user-attachments/assets/4ac4d2ea-d913-439d-8d2d-610f690b8e7a" />
+ <img width="674" height="246" alt="Linux：网络服务_57" src="https://github.com/user-attachments/assets/4ac4d2ea-d913-439d-8d2d-610f690b8e7a" /><br>
 
         
+
