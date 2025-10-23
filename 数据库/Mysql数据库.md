@@ -289,6 +289,7 @@
 
 
   5.2mysql-binlog 日志备份
+        
         ```bash
         二进制日志（log-bin 日志）：所有对数据库状态更改的操作（create、drop、update 等）
         修改 my.cnf 配置文件开启 binlog 日志记录功能
@@ -304,10 +305,8 @@
                 –stop-position
             ```
   
-                mysql-binlog 日志备份示例
-                    
-                    开启二进制日志
  <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
+
 
 
 
