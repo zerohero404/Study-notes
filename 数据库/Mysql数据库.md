@@ -314,7 +314,11 @@
  <img width="470" height="218" alt="Linux：网络服务_56" src="https://github.com/user-attachments/assets/72a4aff6-c930-4fc7-8439-1f960428c69a" /><br>
         查看二进制日志内容:mysqlbinlog 日志文件名字<br>
  <img width="674" height="246" alt="Linux：网络服务_57" src="https://github.com/user-attachments/assets/4ac4d2ea-d913-439d-8d2d-610f690b8e7a" /><br>
+        还原并查看<br>
+        ```bash
+        mysqlbinlog –start-datetime=‘2018-09-11 14:24:00’ –stop-datetime=‘2018-09-11 14:28:00’ mysql-bin.000006 | mysql –uroot –p123123
+        注：所选时间段一定要完整包含所有动作（可以在原来基础上稍微增加点时间
+        ```
 
-        
 
 
