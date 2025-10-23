@@ -250,9 +250,10 @@
   5.备份和还原<br>
         5.1mysqldump 备份<br>
             备份<br>
-            mysqldump -u 用户名 -p 数据库名 > /备份路径/备份文件名（备份整个数据库）<br>
-            mysqldump -u 用户名 -p 数据库名 表名 > /备份路径/备份文件名（备份数据表）<br>
-            备份多个库：–databases 库 1，库 2<br>
+            ```bash
+            mysqldump -u 用户名 -p 数据库名 > /备份路径/备份文件名（备份整个数据库）
+            mysqldump -u 用户名 -p 数据库名 表名 > /备份路径/备份文件名（备份数据表）
+            备份多个库：–databases 库 1，库 2
             备份所有库：–all-databases<br>
             备份多个表：库名 表 1 表 2<br>
             还原<br>
@@ -299,8 +300,10 @@
                     –start-position<br>
                     –stop-position<br>
                 mysql-binlog 日志备份示例<br>
+                ```
                     开启二进制日志<br>
  <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
+
 
 
 
