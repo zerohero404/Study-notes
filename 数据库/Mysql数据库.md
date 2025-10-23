@@ -285,27 +285,30 @@
                 还原（先模拟丢失）
                     mysql -uroot -p 密码
                     mysql>drop database a1;
-                    cp –a /你执行备份所在的路径 /var/lib/mysql/ # 复制产生的文件到数据库目录下<br>
+                    cp –a /你执行备份所在的路径 /var/lib/mysql/ # 复制产生的文件到数据库目录下
 
 
   5.2mysql-binlog 日志备份
-                二进制日志（log-bin 日志）：所有对数据库状态更改的操作（create、drop、update 等）
-                修改 my.cnf 配置文件开启 binlog 日志记录功能
-                    vim /etc/my.cnf 添加下面选项
-                    log-bin=mysql-bin #启动二进制日志
-                按时间还原
-                –start-datetime
-                –stop-datetime
-                格式
-                    mysqlbinlog –start-datetime ‘YY-MM-DD HH:MM:SS’ –stop-datetime ‘YY-MM-DDHH:MM:SS’ 二进制日志 | mysql -uroot -p
-                按文件大小还原
-                    –start-position
-                    –stop-position
-                    
+        ```bash
+        二进制日志（log-bin 日志）：所有对数据库状态更改的操作（create、drop、update 等）
+        修改 my.cnf 配置文件开启 binlog 日志记录功能
+            vim /etc/my.cnf 添加下面选项
+            log-bin=mysql-bin #启动二进制日志
+            按时间还原
+            –start-datetime
+            –stop-datetime
+            格式
+                mysqlbinlog –start-datetime ‘YY-MM-DD HH:MM:SS’ –stop-datetime ‘YY-MM-DDHH:MM:SS’ 二进制日志 | mysql -uroot -p
+            按文件大小还原
+                –start-position
+                –stop-position
+            ```
+  
                 mysql-binlog 日志备份示例
                     
                     开启二进制日志
  <img width="416" height="165" alt="Linux：网络服务_55" src="https://github.com/user-attachments/assets/e0b37447-a241-45ed-8f52-ea27931cd1bb" />
+
 
 
 
