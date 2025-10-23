@@ -320,6 +320,7 @@
   mysqlbinlog –start-datetime=‘2018-09-11 14:24:00’ –stop-datetime=‘2018-09-11 14:28:00’ mysql-bin.000006 | mysql –uroot –p123123
   注：所选时间段一定要完整包含所有动作（可以在原来基础上稍微增加点时间)
   ```
-        按文件大小还原：还原到 bb 库被删除的数据状态
- <img width="662" height="165" alt="Linux：网络服务_58" src="https://github.com/user-attachments/assets/9d32e079-f4c0-4205-8431-73e2a6385aa2" />
-        还原并查看
+  按文件大小还原：还原到 bb 库被删除的数据状态
+ <img width="662" height="165" alt="Linux：网络服务_58" src="https://github.com/user-attachments/assets/9d32e079-f4c0-4205-8431-73e2a6385aa2" /><br>
+ 还原并查看
+
