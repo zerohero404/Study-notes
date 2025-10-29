@@ -106,3 +106,49 @@ net.ipv4.conf.eth0.send_redirects = 0
 &ensp;&ensp;service ipvsadm save  # 保存 ipvs 集群内容至文件，进行持久化存储<br>
 &ensp;&ensp;chkconfig ipvsadm on  # 设置为开机自启<br>
 &ensp;&ensp;ipvsadm -Ln –stats # 查看集群节点数据分发情况<br>
+
+&ensp;真实服务器<br>
+&ensp;&ensp;# 真实服务器 1 和真实服务器 2 都按照这个顺序搭建，不同的地方会提示<br>
+&ensp;&ensp;service iptables stop<br>
+&ensp;&ensp;chkconfig iptables off<br>
+&ensp;&ensp;vim /etc/selinux/config # 关闭 selinux 但是需要重启<br>
+&ensp;&ensp;把SELINUX=enforcing改成SELINUX=disabled<br>
+&ensp;&ensp;setenforce 0 # 临时关闭 selinux<br>
+&ensp;&ensp;service NetworkManager stop # 关闭网卡守护进程<br>
+&ensp;&ensp;chkconfig NetworkManager off<br>
+&ensp;&ensp;cd /etc/sysconfig/network-scripts/<br>
+&ensp;&ensp;vim ifcfg-eth0<br>
+
+```bash
+将 ONBOOT=no 改为 ONBOOT=yes
+将 BOOTPROTO=dhcp 改为 BOOTPROTO=static
+添加
+IPADDR=10.10.10.12
+#真实服务器2 改为 IPADDR=10.10.10.13
+NETMASK=255.255.255.0
+```
+
+&ensp;&ensp;cp -a ifcfg-lo ifcfg-lo:0 # 拷贝回环网卡子接口<br>
+&ensp;&ensp;vim ifcfg-lo:0<br>
+
+```bash
+修改 DEVICE= 为 DEVICE=lo:0
+修改 IPADDR= 为 IPADDR=10.10.10.100（虚拟IP）
+修改 NETMASK= 为NETMASK=255.255.255.255
+```
+&ensp;&ensp;vim /etc/sysctl.conf # 关闭对应 ARP 响应及公告功能<br>
+&ensp;&ensp;添加<br>
+
+```bash
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+net.ipv4.conf.default.arp_ignore = 1
+net.ipv4.conf.default.arp_announce = 2
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+```
+&ensp;&ensp;sysctl -p<br>
+&ensp;&ensp;ifup lo:0<br>
+&ensp;&ensp;route add -host 10.10.10.100（虚拟IP） dev lo:0 # 添加路由记录，当访问虚拟 IP 交给 lo:0 网卡接受<br>
+&ensp;&ensp;echo “route add -host 10.10.10.100 dev lo:0” >> /etc/rc.local # 设置开机执行 route add -host 10.10.10.100 dev lo:0 这条命令<br>
+&ensp;&ensp;service httpd start 或者 service nginx start # 开启网页服务<br>
