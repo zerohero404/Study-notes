@@ -172,15 +172,15 @@ net.ipv4.conf.lo.arp_announce = 2
 - setenforce 0 # 临时关闭 selinux
 - yum -y install ipvsadm # 安装 ipvsadm 命令行工具
 - modprobe ip_vs # 重载 ipvs 模块
-- vim /etc/sysconfig/network-scripts/ifcfg-eth1
+- vim /etc/sysconfig/network-scripts/ifcfg-eth1<br>
 &ensp;&ensp;&ensp;&ensp;修改网卡信息如下<br>
  <img width="345" height="155" alt="Linux：集群_12" src="https://github.com/user-attachments/assets/c6aa6613-3a70-4b03-9ba5-f0070ace4b92" /><br>
-- vim /etc/sysconfig/network-scripts/ifcfg-eth0
+- vim /etc/sysconfig/network-scripts/ifcfg-eth0<br>
 &ensp;&ensp;&ensp;&ensp;修改网卡信息如下<br>
  <img width="356" height="151" alt="Linux：集群_13" src="https://github.com/user-attachments/assets/f89d5c13-dd92-472b-9794-80a754fb7963" /><br>
 - service network restart
-- vim etc/sysctl.conf # 开启路由转发功能
+- vim etc/sysctl.conf # 开启路由转发功能<br>
 &ensp;&ensp;&ensp;&ensp;在配置文件添加:net.ipv4.ip_forward=1
 - sysctl -p
-- iptables -t nat -A POSTROUTING -s 10.10.10.0/24 -o eth0 -j SNAT –to-source 20.20.20.11
+- iptables -t nat -A POSTROUTING -s 10.10.10.0/24 -o eth0 -j SNAT –to-source 20.20.20.11<br>
 &ensp;&ensp;&ensp;&ensp;# 添加防火墙记录，当源地址是 10.10.10.0/24 （内网网段）并且出口网卡为 eth0 的时候进行 SNAT 转换，转换源地址为 20.20.20.11 （外网卡地址）
