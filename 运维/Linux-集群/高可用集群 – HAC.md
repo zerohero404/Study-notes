@@ -300,7 +300,7 @@ priority 100 修改至 priority 47 # 一般建议与主服务器差值为 50
 - vim /etc/sysctl.conf<br>
 &emsp;&emsp;添加:<br>
 
-``bash
+```bash
 net.ipv4.conf.all.arp_ignore = 1
 net.ipv4.conf.all.arp_announce = 2
 net.ipv4.conf.default.arp_ignore = 1
@@ -314,4 +314,51 @@ net.ipv4.conf.lo.arp_announce = 2
 - route add -host 10.10.10.100（虚拟IP） dev lo:0 # 添加路由记录，当访问虚拟 IP 交给 lo:0 网卡接受<br>
 - echo “route add -host 10.10.10.100 dev lo:0” >> /etc/rc.local # 设置开机执行 route add -host 10.10.10.100 dev lo:0 这条命令<br>
 
-### 
+### 负载调度器
+- service NetworkManager stop<br>
+- chkconfig NetworkManager off<br>
+- service iptables stop<br>
+- chkconfig iptables off<br>
+- vim /etc/selinux/config # 关闭 selinux 但是需要重启<br>
+
+```bash
+把SELINUX=enforcing改成SELINUX=disabled
+```
+
+- etenforce 0 # 临时关闭 selinux<br>
+- cd /etc/sysconfig/network-scripts/<br>
+- cp -a ifcfg-eth0 ifcfg-eth0:0 # 拷贝 eth0  网卡子接口充当集群入口接口<br>
+- vim ifcfg-eth0:0<br>
+&emsp;&emsp;只留下:<br>
+
+```bash
+DEVICE=eth0:0
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=10.10.10.100（虚拟IP）
+NETMASK=255.255.255.0
+```
+
+- fup eth0:0<br>
+- service network restart<br>
+- vim /etc/sysctl.conf # 关闭网卡重定向功能（修改 ARP 响应级别和通告行为）<br>
+&emsp;&emsp;添加:<br>
+
+```bash
+# LVS - ARP （注释）
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.conf.eth0.send_redirects = 0
+```
+
+- sysctl -p
+- yum -y install ipvsadm # 安装 ipvsadm 命令行工具
+- modprobe ip_vs # 重载 ipvs 模块
+- service ipvsadm start
+- chkconfig ipvsadm on
+- ipvsadm -Ln （查看集群节点）
+- ipvsadm -A -t 10.10.10.100（虚拟IP）:80 -s rr
+- ipvsadm -a -t 10.10.10.100（虚拟IP）:80 -r 10.10.10.12（Ngin 服务器1IP）:80 -g
+- ipvsadm -a -t 10.10.10.100（虚拟IP）:80 -r 10.10.10.13（Ngin 服务器1IP）:80 -g
+- service ipvsadm save  # 保存 ipvs 集群内容至文件，进行持久化存储
+- ipvsadm -Ln –stats # 查看集群节点数据分发情况
