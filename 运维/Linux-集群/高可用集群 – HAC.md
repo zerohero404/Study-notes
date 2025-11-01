@@ -26,16 +26,16 @@
 ### 1.2.2构建步骤<br>
 - 首先把 LVS-M、RS-1、RS-2 搭建成 LVS+DR 集群<br>
 - LVS-M 操作<br>
-&emsp;&emsp;yum -y install gcc gcc-c++ lrzsz<br>
-&emsp;&emsp;service NetworkManager stop<br>
-&emsp;&emsp;chkconfig NetworkManager off<br>
-&emsp;&emsp;service iptables stop<br>
-&emsp;&emsp;chkconfig iptables off<br>
-&emsp;&emsp;vim /etc/selinux/config # 关闭 selinux 但是需要重启<br>
-&emsp;&emsp;把SELINUX=enforcing改成SELINUX=disabled<br>
-&emsp;&emsp;setenforce 0 # 临时关闭 selinux<br>
-&emsp;&emsp;cd /etc/sysconfig/network-scripts/<br>
-&emsp;&emsp;vim ifcfg-eth0
+- yum -y install gcc gcc-c++ lrzsz<br>
+- service NetworkManager stop<br>
+- chkconfig NetworkManager off<br>
+- service iptables stop<br>
+- chkconfig iptables off<br>
+- vim /etc/selinux/config # 关闭 selinux 但是需要重启<br>
+- 把SELINUX=enforcing改成SELINUX=disabled<br>
+- setenforce 0 # 临时关闭 selinux<br>
+- cd /etc/sysconfig/network-scripts/<br>
+- vim ifcfg-eth0
 
 ```bash
 将 ONBOOT=no 改为 ONBOOT=yes
@@ -45,9 +45,9 @@ IPADDR=10.10.10.11
 NETMASK=255.255.255.0
 ```
 
-&emsp;&emsp;cp -a ifcfg-eth0 ifcfg-eth0:0 # 拷贝 eth0  网卡子接口充当集群入口接口<br>
-&emsp;&emsp;vim ifcfg-eth0:0<br>
-&emsp;&emsp;只留下:<br>
+- cp -a ifcfg-eth0 ifcfg-eth0:0 # 拷贝 eth0  网卡子接口充当集群入口接口<br>
+- vim ifcfg-eth0:0<br>
+- 只留下:<br>
 
 ```bash
 DEVICE=eth0:0
@@ -57,10 +57,10 @@ IPADDR=10.10.10.100（虚拟IP）
 NETMASK=255.255.255.0
 ```
 
-&emsp;&emsp;ifup eth0:0<br>
-&emsp;&emsp;service network restart<br>
-&emsp;&emsp;vim /etc/sysctl.conf # 关闭网卡重定向功能（修改 ARP 响应级别和通告行为）<br>
-&emsp;&emsp;添加<br>
+- ifup eth0:0<br>
+- service network restart<br>
+- vim /etc/sysctl.conf # 关闭网卡重定向功能（修改 ARP 响应级别和通告行为）<br>
+- 添加<br>
 
 ```bash
 # LVS – ARP （注释）
@@ -68,13 +68,13 @@ net.ipv4.conf.all.send_redirects = 0
 net.ipv4.conf.default.send_redirects = 0
 net.ipv4.conf.eth0.send_redirects = 0
 ```
-&emsp;&emsp;sysctl -p<br>
-&emsp;&emsp;yum -y install ipvsadm # 安装 ipvsadm 命令行工具<br>
-&emsp;&emsp;modprobe ip_vs # 重载 ipvs 模块<br>
-&emsp;&emsp;service ipvsadm start<br>
-&emsp;&emsp;chkconfig ipvsadm on<br>
-&emsp;&emsp;ipvsadm -Ln （查看集群节点）<br>
-&emsp;&emsp;下面的操作需要配置好（真实服务器1） 和（真实服务器2）<br>
+- sysctl -p<br>
+- yum -y install ipvsadm # 安装 ipvsadm 命令行工具<br>
+- modprobe ip_vs # 重载 ipvs 模块<br>
+- service ipvsadm start<br>
+- chkconfig ipvsadm on<br>
+- ipvsadm -Ln （查看集群节点）<br>
+- 下面的操作需要配置好（真实服务器1） 和（真实服务器2）<br>
 
 ```bash
 ipvsadm -A -t 10.10.10.100（虚拟IP）:80 -s rr
@@ -111,7 +111,7 @@ ipvsadm -Ln –stats
 ```
 
 - vim /etc/sysctl.conf # 关闭对应 ARP 响应及公告功能<br>
-&emsp;&emsp;添加<br>
+- 添加<br>
 
 ```bash
 net.ipv4.conf.all.arp_ignore = 1
@@ -177,7 +177,7 @@ delay_before_retry 4           # 重试间隔（秒）
 ```
 
 
-&emsp;&emsp;有多少个网站服务器就写多少个 real_server 标签，只需要把网站节点修改<br>
-&emsp;&emsp;文件多余不要的全部删除<br>
+- 有多少个网站服务器就写多少个 real_server 标签，只需要把网站节点修改<br>
+- 文件多余不要的全部删除<br>
 <img width="389" height="775" alt="Linux：集群_20" src="https://github.com/user-attachments/assets/d18dcf3f-368c-4950-8d45-15792f8623f0" /><br>
 - service keepalived start<br>
