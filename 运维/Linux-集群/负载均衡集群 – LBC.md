@@ -213,16 +213,36 @@ net.ipv4.conf.lo.arp_announce = 2
  <img width="747" height="468" alt="Linux：集群_17" src="https://github.com/user-attachments/assets/a703a5ec-d0e1-4aca-a454-29bed08e5848" /><br>
  
 ## 6.2 动态调度算法
-- 特点：除了考虑算法本身，还要考虑服务器状态
-- LC（lest-connection）最少连接：将新的连接请求，分配给连接数最少的服务器 
-&ensp;&ensp;&ensp;&ensp;连接数=活动连接 × 256 + 非活动连接
-&ensp;&ensp;&ensp;&ensp;活动连接：正在传输数据的连接
-&ensp;&ensp;&ensp;&ensp;非活动连接：没有传输数据的连接和传输数据完成还未关闭的连接
-- WLC 加权最少连接：特殊的最少连接算法，权重越大承担的请求数越多    
-&ensp;&ensp;&ensp;&ensp;连接数=（活动连接 × 256 +  非活动连接 ）/ 权重
-- SED 最短期望延迟：特殊的 WLC 算法（活动连接 + 1）× 256 / 权重
-- NQ 永不排队：特殊的 SED 算法，无需等待，如果有真实服务器的连接数等于 0 那就直接分配不需要运算
-- LBLC 特殊的 DH 算法：提高缓存命中率，又要考虑服务器性能的方案
-&ensp;&ensp;&ensp;&ensp;即将 DH 算法中对某一缓存服务器中的缓存文件请求过多，导致这台服务器性能不够，这时这个动态算法就会让缓存服务器集群的另外一台缓存服务器从 web 服务器下载这个缓存文件，然后分担这个缓存文件的请求压力，如果两台服务器也承担不了那就再从缓存服务器集群中再增加一台依次类推
-- LBLCR LBLC+缓存：尽可能提高负载均衡和缓存命中率的折中方案
-&ensp;&ensp;&ensp;&ensp;即当某一缓存服务器中的缓存文件请求过多，集群中的其他缓存服务器想分担请求压力的时候，并不是向 web 服务器下载这个缓存文件，而是向有这个缓存文件的缓存服务器下载，减少web服务器的压力
+- 特点：除了考虑算法本身，还要考虑服务器状态<br>
+- LC（lest-connection）最少连接：将新的连接请求，分配给连接数最少的服务器 <br>
+&ensp;&ensp;&ensp;&ensp;连接数=活动连接 × 256 + 非活动连接<br>
+&ensp;&ensp;&ensp;&ensp;活动连接：正在传输数据的连接<br>
+&ensp;&ensp;&ensp;&ensp;非活动连接：没有传输数据的连接和传输数据完成还未关闭的连接<br>
+- WLC 加权最少连接：特殊的最少连接算法，权重越大承担的请求数越多 <br>   
+&ensp;&ensp;&ensp;&ensp;连接数=（活动连接 × 256 +  非活动连接 ）/ 权重<br>
+- SED 最短期望延迟：特殊的 WLC 算法（活动连接 + 1）× 256 / 权重<br>
+- NQ 永不排队：特殊的 SED 算法，无需等待，如果有真实服务器的连接数等于 0 那就直接分配不需要运算<br>
+- LBLC 特殊的 DH 算法：提高缓存命中率，又要考虑服务器性能的方案<br>
+&ensp;&ensp;&ensp;&ensp;即将 DH 算法中对某一缓存服务器中的缓存文件请求过多，导致这台服务器性能不够，这时这个动态算法就会让缓存服务器集群的另外一台缓存服务器从 web 服务器下载这个缓存文件，然后分担这个缓存文件的请求压力，如果两台服务器也承担不了那就再从缓存服务器集群中再增加一台依次类推<br>
+- LBLCR LBLC+缓存：尽可能提高负载均衡和缓存命中率的折中方案<br>
+&ensp;&ensp;&ensp;&ensp;即当某一缓存服务器中的缓存文件请求过多，集群中的其他缓存服务器想分担请求压力的时候，并不是向 web 服务器下载这个缓存文件，而是向有这个缓存文件的缓存服务器下载，减少web服务器的压力<br>
+## 6.3 持久连接
+- 相关的集群命令<br>
+&emsp;&emsp;ipvsadm -D -t 集群负载调度器IP:端口 # 删除一个集群<br>
+&emsp;&emsp;ipvsadm -Ln –persistent-conn # 查询集群持久化连接时长<br>
+&emsp;&emsp;ipvsadm -Ln -c # 当前集群的连接信息<br>
+- 持久客户端连接<br>
+&emsp;&emsp;定义：每客户端持久，将来自于同一个客户端的所有请求统统定向至此前选定的真实服务器；也就是只要 IP 相同，分配的服务器始终相同<br>
+&emsp;&emsp;创建代码<br>
+&emsp;&emsp;&emsp;&emsp;ipvsadm -A -t 172.16.0.8（负载调度器IP地址）:0 -s wlc -p 120（时间长度，单位秒） # 添加一个 tcp 负载集群，集群地址为 172.16.0.8 ， 算法为 wlc，持久化时间为 120s<br>
+- 持久端口连接<br>
+&emsp;&emsp;定义：每端口持久，将来自于同一个客户端对同一个服务(端口)的请求，始终定向至此前选定的真实服务器<br>
+&emsp;&emsp;创建代码<br>
+&emsp;&emsp;&emsp;&emsp;ipvsadm -A -t 172.16.0.8（负载调度器IP地址）:80 -s rr -p 120 （时间长度，单位秒） # 添加一个 tcp 负载集群，集群地址为 172.16.0.8:80 ， 算法为 wlc，持久化时间为 120s<br>
+- 持久防火墙标记连接<br>
+&emsp;&emsp;定义：将来自于同一客户端对指定服务(端口)的请求，始终定向至此选定的 RS；不过它可以将两个毫不相干的端口定义为一个集群服务<br>
+&emsp;&emsp;创建代码<br>
+&emsp;&emsp;&emsp;&emsp;iptables -t mangle -A PREROUTING -d 172.16.0.8 -p tcp –dport 80 -j MARK –set-mark 10 #添加一个防火墙规则，当目标地址为 172.16.0.8 并且 目标端口为 80 时给数据包打一个标记，设置 mark 值为 10<br>
+&emsp;&emsp;&emsp;&emsp;iptables -t mangle -A PREROUTING -d 172.16.0.8 -p tcp –dport 443 -j MARK –set-mark 10 # 添加一个防火墙规则，当目标地址为 172.16.0.8 并且 目标端口为 443 时给数据包打一个标记，设置 mark 值为 10<br>
+&emsp;&emsp;&emsp;&emsp;service iptables save   # 保存防火墙规则持久化生效<br>
+&emsp;&emsp;&emsp;&emsp;ipvsadm -A -f 10 -s wlc -p 120       # 添加一个负载调度器，当 mark 值为 10 时进行负载均衡使用 wlc 算法，持久化生效时间为 120s<br>
