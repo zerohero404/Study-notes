@@ -181,3 +181,72 @@ delay_before_retry 4           # 重试间隔（秒）
 - 文件多余不要的全部删除<br>
 <img width="389" height="775" alt="Linux：集群_20" src="https://github.com/user-attachments/assets/d18dcf3f-368c-4950-8d45-15792f8623f0" /><br>
 - service keepalived start<br>
+
+
+- LVS-S<br>
+- service NetworkManager stop<br>
+- chkconfig NetworkManager off<br>
+- service iptables stop<br>
+- chkconfig iptables off<br>
+- vim /etc/selinux/config # 关闭 selinux，但是需要重启<br>
+
+```bash
+把SELINUX=enforcing改成SELINUX=disabled
+```
+- setenforce 0 # 临时关闭 selinux<br>
+- cd /etc/sysconfig/network-scripts/<br>
+- vim ifcfg-eth0<br>
+- cp -a ifcfg-eth0 ifcfg-eth0:0 # 拷贝 eth0  网卡子接口充当集群入口接口<br>
+- vim ifcfg-eth0:0<br>
+&emsp;&emsp;只留下:<br>
+
+```bash
+DEVICE=eth0:0
+ONBOOT=yes
+BOOTPROTO=static
+IPADDR=10.10.10.100（虚拟IP）
+NETMASK=255.255.255.0
+```
+
+- vim /etc/sysconfig/network-script/ifup-eth<br>
+ <img width="652" height="66" alt="Linux：集群_21" src="https://github.com/user-attachments/assets/35c3a0bc-94c1-4172-a970-53550ecaf7e8" /><br>
+&emsp;&emsp;# 将这几行注释掉，大约在256 行左右<br>
+
+- ifup eth0:0<br>
+- vim /etc/sysctl.conf # 关闭网卡重定向功能（修改 ARP 响应级别和通告行为）<br>
+&emsp;&emsp;添加:<br>
+
+```bash
+# LVS - ARP （注释）
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.conf.eth0.send_redirects = 0
+```
+
+- sysctl -p<br>
+- yum -y install ipvsadm # 安装 ipvsadm 命令行工具<br>
+- modprobe ip_vs # 重载 ipvs 模块<br>
+- service ipvsadm start<br>
+- chkconfig ipvsadm on<br>
+- yum -y install keepalived<br>
+- chkconfig keepalived on<br>
+- 切换到 LVS-M 服务器将 LVS-M 的 keepalived 配置文件复制到 LVS-S 服务器上<br>
+
+```bash
+scp /etc/keepalived/keepalived.conf root@10.10.10.12（LVS-S 服务器 IP）:/etc/keepalived/keepalived.conf
+```
+
+- vim /etc/keepalived/keepalived.conf<br>
+&emsp;&emsp;修改文件中的<br>
+
+```bash
+router_id LVS-1 修改为 router_id LVS-2
+state MASTER     修改至 state SLAVE
+priority 100 修改至 priority 47 # 一般建议与主服务器差值为 50
+```
+
+- ipvsadm -A -t 10.10.10.100（虚拟IP）:80 -s rr<br>
+- ipvsadm -a -t 10.10.10.100（虚拟IP）:80 -r 10.10.10.12（真实服务器1IP）:80 -g<br>
+- ipvsadm -a -t 10.10.10.100（虚拟IP）:80 -r 10.10.10.13（真实服务器2IP）:80 -g<br>
+- service ipvsadm save   # 保存 ipvs 集群内容至文件，进行持久化存储<br>
+- service keepalived start<br>
