@@ -154,4 +154,21 @@ net.ipv4.conf.lo.arp_announce = 2
 &ensp;&ensp;service httpd start 或者 service nginx start # 开启网页服务<br>
 
 
-# 
+# 5 LVS – NET 搭建
+ <img width="695" height="418" alt="Linux：集群_10" src="https://github.com/user-attachments/assets/144b7291-91f0-443a-b541-f3ad44fe88c6" /><br>
+ <img width="872" height="452" alt="Linux：集群_11" src="https://github.com/user-attachments/assets/cf324f76-c7e6-4737-b336-b269b3cb07c5" /><br>
+## 5.1 环境搭建
+- 三台服务器
+- 注意：负载调度器必须双网卡
+- 负载调度器外网 IP ：20.20.20.11 内网 IP ：10.10.10.11
+- 真实服务器1内网 IP ：10.10.10.12
+- 真实服务器2内网 IP ：10.10.10.13
+## 5.2 构建步骤
+### 5.2.1 负载调度器
+- service NetworkManager stop # 关闭网卡守护进程
+- chkconfig NetworkManager off
+- vim /etc/selinux/config # 关闭 selinux，但是需要重启
+- 把SELINUX=enforcing改成SELINUX=disabled
+- setenforce 0 # 临时关闭 selinux
+- yum -y install ipvsadm # 安装 ipvsadm 命令行工具
+- modprobe ip_vs # 重载 ipvs 模块
