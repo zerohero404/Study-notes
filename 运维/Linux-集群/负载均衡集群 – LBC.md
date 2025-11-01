@@ -42,7 +42,7 @@
 
 # LVS – DR 搭建
 <img width="609" height="400" alt="Linux：集群_7" src="https://github.com/user-attachments/assets/efe4d009-7aeb-4ded-9357-08f5fd6a1ff1" /><br>
-- 环境准备
+## 环境准备
 <img width="1147" height="543" alt="Linux：集群_8" src="https://github.com/user-attachments/assets/4f3c5d8d-87ae-42ef-91bd-0a254228cba3" /><br>
 <img width="774" height="439" alt="Linux：集群_9" src="https://github.com/user-attachments/assets/f6d7ce88-5cd0-43eb-97c3-e0f62e5c15e0" /><br>
 &ensp;三台服务器<br>
@@ -50,7 +50,7 @@
 &ensp;&ensp;负载调度器 本机IP1：10.10.10.11 本机IP2：10.10.10.100<br>
 &ensp;&ensp;真实服务器1 本机IP ：10.10.10.12 伪装地址：10.10.10.100<br>
 &ensp;&ensp;真实服务器2 本机IP ：10.10.10.13 伪装地址：10.10.10.100<br>
-- 构建步骤<br>
+## 构建步骤<br>
 &ensp;负载调度器<br>
 &ensp;&ensp;service NetworkManager stop # 关闭网卡守护进程<br>
 &ensp;&ensp;chkconfig NetworkManager off<br>
