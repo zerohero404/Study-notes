@@ -172,3 +172,13 @@ net.ipv4.conf.lo.arp_announce = 2
 - setenforce 0 # 临时关闭 selinux
 - yum -y install ipvsadm # 安装 ipvsadm 命令行工具
 - modprobe ip_vs # 重载 ipvs 模块
+- vim /etc/sysconfig/network-scripts/ifcfg-eth1
+&ensp;&ensp;&ensp;&ensp;修改网卡信息如下
+ <img width="345" height="155" alt="Linux：集群_12" src="https://github.com/user-attachments/assets/c6aa6613-3a70-4b03-9ba5-f0070ace4b92" /><br>
+- vim /etc/sysconfig/network-scripts/ifcfg-eth0
+&ensp;&ensp;&ensp;&ensp;修改网卡信息如下
+ <img width="356" height="151" alt="Linux：集群_13" src="https://github.com/user-attachments/assets/f89d5c13-dd92-472b-9794-80a754fb7963" /><br>
+- service network restart
+- vim etc/sysctl.conf
+&ensp;&ensp;&ensp;&ensp;
+ 
