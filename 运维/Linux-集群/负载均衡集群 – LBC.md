@@ -157,6 +157,7 @@ net.ipv4.conf.lo.arp_announce = 2
 # 5 LVS – NET 搭建
  <img width="695" height="418" alt="Linux：集群_10" src="https://github.com/user-attachments/assets/144b7291-91f0-443a-b541-f3ad44fe88c6" /><br>
  <img width="872" height="452" alt="Linux：集群_11" src="https://github.com/user-attachments/assets/cf324f76-c7e6-4737-b336-b269b3cb07c5" /><br>
+ 
 ## 5.1 环境搭建
 - 三台服务器
 - 注意：负载调度器必须双网卡
@@ -184,3 +185,31 @@ net.ipv4.conf.lo.arp_announce = 2
 - sysctl -p
 - iptables -t nat -A POSTROUTING -s 10.10.10.0/24 -o eth0 -j SNAT –to-source 20.20.20.11<br>
 &ensp;&ensp;&ensp;&ensp;# 添加防火墙记录，当源地址是 10.10.10.0/24 （内网网段）并且出口网卡为 eth0 的时候进行 SNAT 转换，转换源地址为 20.20.20.11 （外网卡地址）
+- iptables -t nat -L # 查看记录是否保存成功
+- ipvsadm -A -t 20.20.20.11（外网卡地址）:80 -s rr
+- ipvsadm -a -t 20.20.20.11（外网卡地址）:80 -r 10.10.10.12（真实服务器1地址）:80 -m
+- ipvsadm -a -t 20.20.20.11（外网卡地址）:80 -r 10.10.10.13（真实服务器2地址）:80 -m
+- ipvsadm -Ln # 查看集群
+- service ipvsadm save # 保存集群信息
+- service iptables save # 保存防火墙规则
+- chkconfig ipvsadm on
+### 5.2.2 真实服务器
+- echo “GATEWAY=10.10.10.11（负载调度器内网IP地址）” >> /etc/sysconfig/network-scripts/ifcfg-eth0
+- service httpd start 或者 service nginx start # 开启网页服务
+
+# 6 负载均衡集群调度算法（策略）
+## 6.1 静态调度算法
+- 特点：只根据算法本身去调度，不考虑服务器本身
+- RR 轮询：将每次用户的请求分配给后端的服务器，从第一台服务器开始到第N 台结束， 然后循环<br>
+&ensp;&ensp;&ensp;&ensp;它均等的对待每一台真实服务器，而不管服务器实际的连接数和系统负载。权重值相同，权重值若为0则表示真实服务器不可用。<br>
+ <img width="798" height="366" alt="Linux：集群_14" src="https://github.com/user-attachments/assets/12ac5f9b-a27a-4690-afcf-40972b0567d8" /><br>
+- WRR 加权轮询：按照权重的比例实现在多台主机之间进行调度。<br>
+ <img width="755" height="369" alt="Linux：集群_15" src="https://github.com/user-attachments/assets/5e0ea3d4-7d74-402b-a8d6-22ba08e045fe" /><br>
+- SH（source hash）源地址散列：将同一个 IP 的用户请求，发送给同一个服务器<br>
+&ensp;&ensp;&ensp;&ensp;当用户第一次请求时，负载调度器会根据轮询算法按顺序将请求转发到后端的真实服务器上，并会将用户请求的源IP+转发到后端的真实服务器对应关系以散列键=值的方式存放到一张散列表（哈希表）中，当用户再一次请求时，负载调度器会根据请求的源IP，匹配散列表中对应关系，将请求分发到后端的同一台真实服务器上。若后端的真实服务器超载或不可用，则会返回空。<br>
+ <img width="804" height="432" alt="Linux：集群_16" src="https://github.com/user-attachments/assets/ae706979-d832-4fcb-a027-34ef8ffadcc9" /><br>
+- DH（destination hash）目标地址散列：将同一个目标地址的用户请求发送给同一个真实服务器（提高缓存的命中率）<br>
+&ensp;&ensp;&ensp;&ensp;这种调度算法一般用于后端真实服务器为缓存服务器的场景下，我们希望将所有请求可以一直都匹配到缓存，通过缓存服务器直接返回响应给用户，这种调度算法就基本失去了负载均衡的意义，基本上不会用。<br>
+ <img width="747" height="468" alt="Linux：集群_17" src="https://github.com/user-attachments/assets/a703a5ec-d0e1-4aca-a454-29bed08e5848" /><br>
+ 
+
