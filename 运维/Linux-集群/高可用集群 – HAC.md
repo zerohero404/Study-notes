@@ -250,3 +250,68 @@ priority 100 修改至 priority 47 # 一般建议与主服务器差值为 50
 - ipvsadm -a -t 10.10.10.100（虚拟IP）:80 -r 10.10.10.13（真实服务器2IP）:80 -g<br>
 - service ipvsadm save   # 保存 ipvs 集群内容至文件，进行持久化存储<br>
 - service keepalived start<br>
+
+# 2. 多级负载
+## 2.1 服务器拓扑图
+ <img width="885" height="480" alt="Linux：集群_22" src="https://github.com/user-attachments/assets/c6fb9ed7-01c9-4c96-85bb-651bbbeabe2a" /><br>
+## 2.2 服务器构建
+### 2.2.1 网页服务器（三台都是如此设置）
+- ervice iptables stop<br>
+- chkconfig iptables off<br>
+- vim /etc/selinux/config # 关闭 selinux 但是需要重启<br>
+- setenforce 0 # 临时关闭 selinux<br>
+- service NetworkManager stop<br>
+- chkconfig NetworkManager off<br>
+- service httpd start<br>
+- echo “www.baidu.com-1” >> /var/www/html/index.html<br>
+&emsp;&emsp;# 此步骤为了区分各个网页服务器，15 服务器写 www.baidu.com-2，16 服务器写 www.baidu.cn
+### 2.2.2 两台 nginx 服务器
+- yum -y install gcc gcc-c++ lrzsz<br>
+- yum -y install gcc*<br>
+- yum -y install pcre-devel openssl openssl-devel<br>
+- 下载 nginx 源码包<br>
+- wget http://nginx.org/download/nginx-1.19.4.tar.gz<br>
+- tar -xf nginx-1.19.4.tar.gz<br>
+- cd nginx-1.19.4<br>
+- useradd -s /sbin/nologin -M nginx<br>
+- ./configure –prefix=/usr/local/nginx –user=nginx –group=nginx<br>
+- make && make instal<br>
+- cd /usr/local/nginx/conf/<br>
+- vim nginx.conf<br>
+&emsp;&emsp;将 http 标签修改成这样:<br>
+ <img width="580" height="719" alt="Linux：集群_23" src="https://github.com/user-attachments/assets/41635a6c-2cf2-4647-934d-c261697a33c2" /><br>
+- ln /usr/local/nginx/sbin/* /usr/sbin/<br>
+- nginx -t # 检查配置文件<br>
+- /usr/local/nginx/sbin/nginx # 启动 nginx<br>
+- service NetworkManager stop<br>
+- chkconfig NetworkManager off<br>
+- service NetworkManager stop<br>
+- chkconfig NetworkManager off<br>
+- cd /etc/sysconfig/network-scripts/<br>
+- cp -a ifcfg-lo ifcfg-lo:0<br>
+- vim ifcfg-lo:0<br>
+
+```bash
+修改 DEVICE= 为 DEVICE=lo:0
+修改 IPADDR= 为 IPADDR=10.10.10.100（虚拟IP）
+修改 NETMASK= 为NETMASK=255.255.255.255
+```
+
+- vim /etc/sysctl.conf<br>
+&emsp;&emsp;添加:<br>
+
+``bash
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+net.ipv4.conf.default.arp_ignore = 1
+net.ipv4.conf.default.arp_announce = 2
+net.ipv4.conf.lo.arp_ignore = 1
+net.ipv4.conf.lo.arp_announce = 2
+```
+
+- sysctl -p<br>
+- ifup lo:0<br>
+- route add -host 10.10.10.100（虚拟IP） dev lo:0 # 添加路由记录，当访问虚拟 IP 交给 lo:0 网卡接受<br>
+- echo “route add -host 10.10.10.100 dev lo:0” >> /etc/rc.local # 设置开机执行 route add -host 10.10.10.100 dev lo:0 这条命令<br>
+
+### 
