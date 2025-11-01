@@ -1,11 +1,11 @@
 # 1. LVS+DR+Keepalived
 ## 1.1 Keepalived 相关说明
-- 软件相关介绍
-&emsp;&emsp;案例环境专为LVS 和 HA 设计的一款健康检查工具，支持故障自动切换（Failover），支持节点健康状态检查（Health Checking）
-&emsp;&emsp;官方网站：http://www.keepalived.org/
-- 软件实现原理
-&emsp;&emsp;VRRP（Virtual Router Redundancy Protocol，虚拟路由冗余协议）
-&emsp;&emsp;一主 + 多备，共用同一个 IP 地址，但优先级不同
+- 软件相关介绍<br>
+&emsp;&emsp;案例环境专为LVS 和 HA 设计的一款健康检查工具，支持故障自动切换（Failover），支持节点健康状态检查（Health Checking）<br>
+&emsp;&emsp;官方网站：http://www.keepalived.org/<br>
+- 软件实现原理<br>
+&emsp;&emsp;VRRP（Virtual Router Redundancy Protocol，虚拟路由冗余协议）<br>
+&emsp;&emsp;一主 + 多备，共用同一个 IP 地址，但优先级不同<br>
  <img width="537" height="252" alt="Linux：集群_18" src="https://github.com/user-attachments/assets/04619cef-d17f-4898-a0dc-8fea1687272d" /><br>
 ## 1.2 Keepalived + LVS 高可用集群构建
  <img width="574" height="358" alt="Linux：集群_19" src="https://github.com/user-attachments/assets/a61f45d9-1358-4fe1-903a-7ad3a6197f75" /><br>
