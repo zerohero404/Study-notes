@@ -258,7 +258,7 @@ ENTRYPOINT /root/apache-tomcat-7.0.42/bin/startup.sh && tailf /root/apache-tomca
       }
 ```
   - systemctl daemon-reload
-  - systemctl restart docker
+    - systemctl restart docker
 - 上传镜像
   - docker tag bf756（要上传镜像 ID 号） hub.zhangxu.com（私有仓库限定域名）/my-dockerhub（仓库名）/hello:v1.0（仓库显示镜像名:版本号） # 首先给你要上传的镜像打上标签
   - docker login hub.zhangxu.com（私有仓库限定域名） 输入账号密码 # 如果你要上传的是私有仓库,还需要登录
