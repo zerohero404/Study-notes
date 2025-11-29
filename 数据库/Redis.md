@@ -205,7 +205,6 @@ Redis 是一个支持持久化的内存数据库，也就是说需要经常将�
   <img width="419" height="66" alt="Linux-Redis_10" src="https://github.com/user-attachments/assets/84e478ce-8868-4bf5-b214-c40f8d825323" /><br>
   - vim /etc/nginx/conf.d/default.conf<br>
   <img width="770" height="471" alt="Linux-Redis_11" src="https://github.com/user-attachments/assets/71e40b6a-634a-41bc-9091-4cd87d178e9c" /><br>
-  <img width="770" height="471" alt="Linux-Redis_12" src="https://github.com/user-attachments/assets/4d23095a-b469-4f9c-9f80-6f2adf96fce0" /><br>
   - 启动 nginx
   - service nginx start
 - 修改 php-fpm 配置文件
