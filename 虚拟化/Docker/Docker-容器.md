@@ -256,6 +256,7 @@ ENTRYPOINT /root/apache-tomcat-7.0.42/bin/startup.sh && tailf /root/apache-tomca
       {
       "insecure-registries": ["harbor 主机名"]
       }
+```
   - systemctl daemon-reload
   - systemctl restart docker
 - 上传镜像
