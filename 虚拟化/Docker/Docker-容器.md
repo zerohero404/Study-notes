@@ -176,7 +176,95 @@ ENTRYPOINT /root/apache-tomcat-7.0.42/bin/startup.sh && tailf /root/apache-tomca
 - vim Dockerfile 把上面内容复制进去，再把 apache-tomcat-7.0.42.tar.gz 和 jdk-7u25-linux-x64.tar.gz 两个文件和 Dockerfile 文件放在一个目录，再在当前目录执行 docker build -t 镜像名:版本号 ./（当前目录）就完成镜像制作了，然后运行就可以了
   - docker run --name tomcat -p 80:8080 -d tomcat:v1.0
 
-
+## 4.3 私有仓库搭建
+- Harbor
+  - 项目地址：https://github.com/vmware/harbor
+  - Harbor 是 VMware 公司开源的企业级 DockerRegistry 项目，其目标是帮助用户迅速搭建一个企业级的 Dockerregistry 服务。它以 Docker公 司开源的 registry 为基础，提供了管理 UI， 基于角色的访问控制(Role Based Access Control)， AD/LDAP 集成、以及审计日志 (Auditlogging) 等企业用户需求的功能，同时还原生支持中文。Harbor 的每个组件都是以 Docker 容器的形式构建的，使用 Docker-Compose 来对它进行部署。用于部署 Harbor 的Docker Compose 模板位于  /Deployer/docker-compose.yml，
+  - Harbor 由5个容器组成，这几个容器通过 Docker link 的形式连接在一起，在容器之间通过容器名字互相访问。对终端用户而言，只需要暴露 proxy （ 即Nginx）的服务端口
+    - Proxy：由Nginx 服务器构成的反向代理
+    - Registry：由Docker官方的开源 registry 镜像构成的容器实例
+    - UI：即架构中的 core services， 构成此容器的代码是 Harbor 项目的主体。
+    - MySQL：由官方 MySQL 镜像构成的数据库容器
+    - Log：运行着 rsyslogd 的容器，通过 log-driver 的形式收集其他容器的日志
+- Harbor 特性
+  - 基于角色控制：用户和仓库都是基于项目进行组织的， 而用户基于项目可以拥有不同的权限
+  - 基于镜像的复制策略：镜像可以在多个Harbor实例之间进行复制
+  - 支持LDAP： Harbor的用户授权可以使用已经存在LDAP用户
+  - 镜像删除 & 垃圾回收： Image可以被删除并且回收Image占用的空间，绝大部分的用户操作API， 方便用户对系统进行扩展
+  - 用户UI：用户可以轻松的浏览、搜索镜像仓库以及对项目进行管理
+  - 轻松的部署功能： Harbor提供了online、offline安装，除此之外还提供了virtualappliance安装
+  - Harbor 和 docker registry 关系： Harbor实质上是对 docker registry 做了封装，扩展了自己的业务模块
+  - <img width="500" height="258" alt="Linux：虚拟化33" src="https://github.com/user-attachments/assets/e91d757e-3fd8-4813-9814-7554162ff682" />
+- Harbor 拉取镜像认证过程
+  - dockerdaemon从docker registry拉取镜像
+  - 如果dockerregistry需要进行授权时， registry将会返回401 Unauthorized响应，同时在响应中包含了docker client如何进行认证的信息
+  - dockerclient根据registry返回的信息，向auth server发送请求获取认证token
+  - auth server则根据自己的业务实现去验证提交的用户信息是否存符合业务要求
+  - 用户数据仓库返回用户的相关信息
+  - auth server将会根据查询的用户信息，生成token令牌，以及当前用户所具有的相关权限信息.上述就是完整的授权过程.当用户完成上述过程以后便可以执行相关的pull/push操作。认证信息会每次都带在请求头中
+  - Harbor整体架构
+    - <img width="378" height="191" alt="Linux：虚拟化34" src="https://github.com/user-attachments/assets/ac055f3e-4e68-4a0a-90e0-594995c69353" />
+- Harbor 认证流程
+  - 首先，请求被代理容器监听拦截，并跳转到指定的认证服务器
+  - 如果认证服务器配置了权限认证，则会返回401。通知dockerclient在特定的请求中需要带上一个合法的token。而认证的逻辑地址则指向架构图中的core services
+  - 当docker client接受到错误code。client就会发送认证请求(带有用户名和密码)到coreservices进行basic auth认证
+  - 当C的请求发送给ngnix以后， ngnix会根据配置的认证地址将带有用户名和密码的请求发送到core serivces
+  - coreservices获取用户名和密码以后对用户信息进行认证(自己的数据库或者介入LDAP都可以)。成功以后，返回认证成功的信息
+  - Harbor认证流程图
+    - <img width="379" height="156" alt="Linux：虚拟化35" src="https://github.com/user-attachments/assets/a26cd2f9-1f63-479d-b35b-6d326d3e96ba" />
+- Harbor 搭建步骤
+  - Harbor 对系统要求
+    - Python应该是2.7或更高版本
+    - Docker引擎应为1.10或更高版本
+    - Docker Compose需要为1.6.0或更高版本
+  - 去 https://github.com/goharbor/harbor/releases/tag/v1.2.0 下载 harbor-offline-installer-v1.2.0.tgz
+  - 上传到 docker 服务器，docker 开启
+  - tar -xf harbor-offline-installer-v1.2.0.tgz # 解压你上传的压缩包
+  - mv harbor /usr/local/
+  - mkdir /key && cd /key
+  - openssl genrsa -des3 -out server.key 2048 然后输入密码 # 配置 Harbor 需要的 https 证书
+  - openssl req -new -key server.key -out server.csr 输入密码之后依次输入你的国家、省份、城市、公司名称、公司单位名称、域名、邮件地址、是否修改密码、可选公司名称
+  - cp server.key server.key.org
+  - openssl rsa -in server.key.org -out server.key # 给证书退密，因为 Harbor 登录无法输入密码
+  - openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
+  - mkdir -p /data/cert # 创建 Harbor 读取证书路径
+  - mv * /data/cert # 把所有证书移动到 Harbor 读取证书路径
+  - chmod -R 777 /data/cert
+  - cd /usr/local/harbor
+  - vim harbor.cfg # 修改 harbor 安装配置文件，修改一下几个选项
+    - hostname = hub.zhangxu.com # 目标的主机名或者完全限定域名
+    - ui_url_protocol = https # 建议修改成https。默认为http
+    - db_password = root123 # 用于db_auth的MySQL数据库的根密码
+    - max_job_workers = 3 # 默认值为3，作用是最大支持上传下载镜像最大线程
+    - customize_crt = on #（on或off。默认为on）当此属性打开时，  prepare脚本将为注册表的令牌的生成/验证创建私钥和根证书
+    - ssl_cert = /data/cert/server.crt # 你刚刚创建SSL证书的路径，仅当协议设置为https时才应用
+    - ssl_cert_key = /data/cert/server.key # 你刚刚创建 SSL密钥的路径，仅当协议设置为https时才应用
+    - secretkey_path = /data # 用于在复制策略中加密或解密远程注册表的密码的密钥路径
+    - harbor_admin_password = harbor123 # Harbor 网页 admin 管理员的密码默认是 Harbor12345
+  - ./install.sh # 运行脚本安装
+  - 然后输入 https://hub.zhangxu.com（你再配置文件填写的 hostname）就可以进入管理页面
+    - 需要 DNS 服务器将 hub.zhangxu.com 解析成你的 docker 服务器 IP地址
+    - 如果没有你需要修改本地 Hosts 文件
+      - windows 路径 ：C:\Windows\System32\drivers\etc
+      - linux：/etc/hosts
+- 上传、下载给私有镜像
+  - vim /usr/lib/systemd/system/docker.service # 打开 docker 配置文件
+  - 在 ExecStart=/usr/bin/dockerd 后面添加 --insecure-registry=hub.zhangxu.com （harbor 限定域名）
+  - vim /etc/docker/daemon.json
+    - 添加
+```bash
+      {
+      "insecure-registries": ["harbor 主机名"]
+      }
+  - systemctl daemon-reload
+  - systemctl restart docker
+- 上传镜像
+  - docker tag bf756（要上传镜像 ID 号） hub.zhangxu.com（私有仓库限定域名）/my-dockerhub（仓库名）/hello:v1.0（仓库显示镜像名:版本号） # 首先给你要上传的镜像打上标签
+  - docker login hub.zhangxu.com（私有仓库限定域名） 输入账号密码 # 如果你要上传的是私有仓库,还需要登录
+  - docker push hub.zhangxu.com/my-dockerhub/hello:v1.0（你刚刚创建的镜像标签） # 上传镜像
+- 下载镜像
+  - docker login hub.zhangxu.com
+  - docker pull hub.zhangxu.com/my-dockerhub/hello:v1.0
 
 
 
