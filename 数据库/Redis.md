@@ -1,7 +1,7 @@
 # 1.Redis 简介
 ## 1.1 非关系型数据库-NoSQL
 NoSQL(NoSQL = Not Only SQL )，意为反 SQL 运动，是一项全新的数据库革命性运动，2000 年前就有人提出，发展至 2009 年趋势越发高涨。它是指运用非关系型的数据存储，相对于铺天盖地的关系型数据库运用，这一概念无疑是一种全新的思维的注入。<br>
-随着互联网web2.0 网站的兴起，传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。NoSQL 数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题
+随着互联网web2.0 网站的兴起，传统的关系数据库在应付 web2.0 网站，特别是超大规模和高并发的 SNS 类型的 web2.0 纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。NoSQL 数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题<br>
 <img width="864" height="557" alt="Linux-Redis_1png" src="https://github.com/user-attachments/assets/2df522a3-62cd-4631-bebd-d4fd510bb62d" /><br>
 
 ## 1.2 NoSQL 的特性？
@@ -15,7 +15,7 @@ NoSQL 是 key-value 形式存储，和传统的关系型数据库不一样,不�
 
 ## 1.3 什么是 Redis？
 Redis 是一个开源的，先进的 key-value 存储。它通常被称为数据结构服务器，因为键可以包含 string（字符串）、hash（哈希）、list（链表）、set（集合）和 zset（sorted-set–有序集合）。这些数据类型都支持 push/pop、add/remove 及取交集并集和差集及更丰富的操作<br>
-Redis 和Memcached 类似，它支持存储的 value 类型相对更多，与 memcached 一样，为了保证效率，数据都是缓存在内存中，区别是 Redis 会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了 master-slave(主从)同步。
+Redis 和Memcached 类似，它支持存储的 value 类型相对更多，与 memcached 一样，为了保证效率，数据都是缓存在内存中，区别是 Redis 会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了 master-slave(主从)同步。<br>
 <img width="755" height="425" alt="Linux-Redis_2" src="https://github.com/user-attachments/assets/5fe23cec-9f00-4bc8-9bb7-6a6ea59f161e" /><br>
 
 # 2. Redis 操作
@@ -66,14 +66,14 @@ Redis 和Memcached 类似，它支持存储的 value 类型相对更多，与 me
 ### 2.2.2 hash 类型及操作
 - Redis hash 是一个 string 类型的 field（字段）和 value 的映射表，它的添加、删除操作都是 0(1) 平均；hash 特别适合用于存储对象，相较于将对象的每个字段存成单个string 类型，将一个对象存储在 hash 类型中会占用更少的内存，并且可以更方便的存取整个对象。
   - hset：设置 hash field  为指定值，如果 key 不存在，则先创建。
-    - 例如：为num1 表创建一个叫 name 字段（key），键值是 liuchuan: redis127.0.0.1:6379>hset num1 name liuchuan
+    - 例如：为num1 表创建一个叫 name 字段（key），键值是 liuchuan: redis127.0.0.1:6379>hset num1 name liuchuan<br>
     <img width="485" height="224" alt="Linux-Redis_03" src="https://github.com/user-attachments/assets/f0cfa80d-eaff-4ed2-ae8d-3bdfa519fba7" /><br>
   - hget、hmset、hmget 意义同上近似
   - hdel：删除制定表中的某一个键值对
   - hgetall：列出表中的所有键值对
 
 ### 2.2.3 list 类型及操作
-list 是一个链表结构，主要功能是 push、pop、获取一个范围内的所有值等等，操作中 key 理解为链表的名字。Redis 的 list 类型其实就是一个每个子元素都是 string 类型的双向链表。我们可以通过push、pop 操作从链表的头部或尾部添加删除元素。
+list 是一个链表结构，主要功能是 push、pop、获取一个范围内的所有值等等，操作中 key 理解为链表的名字。Redis 的 list 类型其实就是一个每个子元素都是 string 类型的双向链表。我们可以通过push、pop 操作从链表的头部或尾部添加删除元素。<br>
 <img width="512" height="250" alt="Linux-Redis_04" src="https://github.com/user-attachments/assets/675777fc-54b4-4c79-8e0d-a63069ffd39d" /><br>
 - lpush：在 key 对应 list 的头部添加字符串元素
   - redis127.0.0.1:6379>lpush zhangsan zhangsan
@@ -81,11 +81,11 @@ list 是一个链表结构，主要功能是 push、pop、获取一个范围内�
 - lrange：从指定链表中获取指定范围的元素
   - redis127.0.0.1:6379>lrange zhangsan 0 -1
   - 0 -1：此范围代表全部元素，意为从头到尾
-  - lpush、rpush、lpop、rpop、lrange 详见图示
+  - lpush、rpush、lpop、rpop、lrange 详见图示<br>
   <img width="751" height="489" alt="Linux-Redis_05" src="https://github.com/user-attachments/assets/71e50f85-db76-4168-800f-537ac2683179" /><br>
 
 ### 2.2.4 Set 类型及操作
-set 是集合，他是 string 类型的无序集合。Set 是通过 hash table 实现的，对集 、交集、差集。通过这些操作我们可以实现社交网站中的好友推荐和blog 的 tag 功能。集合不允许有重复值
+set 是集合，他是 string 类型的无序集合。Set 是通过 hash table 实现的，对集 、交集、差集。通过这些操作我们可以实现社交网站中的好友推荐和blog 的 tag 功能。集合不允许有重复值<br>
 <img width="677" height="421" alt="Linux-Redis_06" src="https://github.com/user-attachments/assets/c68ef319-1e58-4a63-8e95-2179f0d3486b" /><br>
 - sadd：添加一个或多个元素到集合中
   - redis127.0.0.1:6379>sadd mset 1 2 3 4
@@ -100,7 +100,7 @@ set 是集合，他是 string 类型的无序集合。Set 是通过 hash table �
 - sunion：获得指定集合的并集
 
 ### 2.2.5 zset 类型及操作
-zset 是 set 的一个升级版本，它在 set 的基础上增加了一个顺序属性，这一属性在添加修改元素的时候可以指定，每次指定后，zset 会自动重新按新的值调整顺序。可以理解为有两列的 mysql 表，一列存的 value，一列存的顺序。操作中 key 理解为 zset 的名字
+zset 是 set 的一个升级版本，它在 set 的基础上增加了一个顺序属性，这一属性在添加修改元素的时候可以指定，每次指定后，zset 会自动重新按新的值调整顺序。可以理解为有两列的 mysql 表，一列存的 value，一列存的顺序。操作中 key 理解为 zset 的名字<br>
 <img width="641" height="438" alt="Linux-Redis_07" src="https://github.com/user-attachments/assets/8c95f87e-cd08-4836-8202-01f40fd5c7c4" /><br>
 - zadd：向一个指定的有序集合中添加元素，每一个元素会对应的有一个分数。你可以指定多个分数/成员组合。如果一个指定的成员已经在对应的有序集合中了，那么其分数就会被更新成最新的，并且该成员会重新调整到正确的位置，以确保集合有序。分数的值必须是一个表示数字的字符串
   - redis127.0.0.1:6379>zadd zset 2 zhangsan 1 lisi 1 wangwu
@@ -134,7 +134,7 @@ zset 是 set 的一个升级版本，它在 set 的基础上增加了一个顺�
 - 给 redis 服务器设置密码
   - 修改配置文件
   - vi /usr/local/redis/etc/redis.conf
-    - 找到 requirepass
+    - 找到 requirepass<br>
     <img width="768" height="760" alt="Linux-Redis_08" src="https://github.com/user-attachments/assets/97edbdb2-1e34-4c5a-b549-b041abcbd86a" /><br>
     - 复制并且黏贴 然后改为 requirepass 密码即可
   - 重启 redis
@@ -174,7 +174,7 @@ Redis 是一个支持持久化的内存数据库，也就是说需要经常将�
     - 过了 60 秒并且至少有 10000 个 key 发生了改变 也会触发 save 动作
   - 在 redis.conf 文件中 dir ./定义了数据库文件的存放位置，默认是当前目录。所以每次重启 redis 服务所在的位置不同，将会生成新的 dump.rdb 文件；建议服务器搭建完成时先修改快照文件保存位置
     - vim redis安装路径/etc/redis.conf
-      - 找到 dir ./
+      - 找到 dir ./<br>
       <img width="762" height="734" alt="Linux-Redis_09" src="https://github.com/user-attachments/assets/b8f53e85-ee05-4906-9988-0626c9221747" /><br>
       - 把 ./ 修改成要存放的路径
 - append-only file（缩写 aof）
@@ -239,12 +239,70 @@ phpinfo();
   - 安装<br>
   <img width="759" height="331" alt="Linux-Redis_16" src="https://github.com/user-attachments/assets/5c1d5677-3190-450e-8dfa-f488bd34f387" /><br>
 - 让 php 支持 redis
-  - vim /etc/php.ini
-
-
-
-
-
+  - vim /etc/php.ini<br>
+  <img width="767" height="235" alt="Linux-Redis_17" src="https://github.com/user-attachments/assets/a488b324-0509-4221-87e8-c61ab2fbc5ee" />
+  - service php-fpm restart
+  - 在浏览器输入服务器 IP 地址看看测试页面有没有 redis 这个模块<br>
+  <img width="761" height="99" alt="Linux-Redis_18" src="https://github.com/user-attachments/assets/f351069e-272d-4add-8a84-331b9842b68c" /><br>
+- 进入 mysql
+  - mysql -uroot -p
+  - mysql>create database mytest; # 创建 mystest 这个库
+  - mysql>use mytest # 选择 mystest 这个库
+  - mysql>create table test(id int,name char(20)); # 创建 test 这个表
+  - mysql>insert into test values (1,’wang’),(2,’zhang’),(3,’li’),(4,’liu’),(5,’zhu’); # 往 test 这个表里插入数据
+  - select * form test; # 查看 test 这个表里的所有数据
+- 编写redis脚本
+  - vim /www/redis-mysql.php
+```bash
+<?php
+		ini_set("display_errors", "On");
+		error_reporting(E_ALL | E_STRICT);
+		//开启debug 
+	
+	
+		// mysql 库: mytest 表：test 
+        $redis = new redis();
+        $redis->connect('127.0.0.1',6379);
+        $query = "select * from test limit 5";
+        for ($key=1;$key<=5;$key++)
+        {
+                if (!$redis->get($key))
+				//判断redis中是否有1 2 3 4 5 的键，没有连接数据库查询mytest库的test表，然后插入到redis中
+                {
+                        $connect = mysql_connect('127.0.0.1','root','123456');
+                        mysql_select_db(mytest);
+                        $result = mysql_query($query);
+						var_dump ($result);
+                        while ($row = mysql_fetch_assoc($result))
+                        {
+                                $redis->setex($row['id'],30,$row['name']);
+								//从MySQL中获取的资源插入到redis中，并设置有效时间为30s
+                        }
+                        $myserver = 'mysql';
+                        break;
+                }
+                else
+				//判断redis中是否有1 2 3 4 5 的键，有直接打印redis中的 1 2 3 4 5 键的值。
+                {
+                        $myserver = "redis";
+                        $data[$key] = $redis->get($key);
+                }
+        }
+                        echo $myserver;
+                        echo "<br>";
+                        for ($key=1;$key<=5;$key++)
+                        {
+                                echo "number is <b><font color=#FF0000>$key</font></b>";
+                                echo "<br>";
+                                echo "name is <b><font color=#FF0000>$data[$key]</font></b>";
+                                echo "<br>";
+                        }
+?>
+```
+- 开启 redis
+  - /usr/local/redis/bin/redis-server /usr/local/redis/etc/redis.conf（配置文件路径）
+- 在浏览器输入服务器 IP/redis-mysql.php 查看<br>
+<img width="1091" height="380" alt="Linux-Redis_19" src="https://github.com/user-attachments/assets/44cae47a-feaa-4224-b7e5-273a8bb67ddc" />
 
 
 
