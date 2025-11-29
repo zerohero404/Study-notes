@@ -16,7 +16,7 @@ NoSQL 是 key-value 形式存储，和传统的关系型数据库不一样,不�
 ## 1.3 什么是 Redis？
 Redis 是一个开源的，先进的 key-value 存储。它通常被称为数据结构服务器，因为键可以包含 string（字符串）、hash（哈希）、list（链表）、set（集合）和 zset（sorted-set–有序集合）。这些数据类型都支持 push/pop、add/remove 及取交集并集和差集及更丰富的操作<br>
 Redis 和Memcached 类似，它支持存储的 value 类型相对更多，与 memcached 一样，为了保证效率，数据都是缓存在内存中，区别是 Redis 会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了 master-slave(主从)同步。
-<img width="755" height="425" alt="Linux-Redis_2" src="https://github.com/user-attachments/assets/5fe23cec-9f00-4bc8-9bb7-6a6ea59f161e" />
+<img width="755" height="425" alt="Linux-Redis_2" src="https://github.com/user-attachments/assets/5fe23cec-9f00-4bc8-9bb7-6a6ea59f161e" /><br>
 
 # 2. Redis 操作
 ## 2.1 Redis 安装
@@ -82,11 +82,11 @@ list 是一个链表结构，主要功能是 push、pop、获取一个范围内�
   - redis127.0.0.1:6379>lrange zhangsan 0 -1
   - 0 -1：此范围代表全部元素，意为从头到尾
   - lpush、rpush、lpop、rpop、lrange 详见图示
-  <img width="751" height="489" alt="Linux-Redis_05" src="https://github.com/user-attachments/assets/71e50f85-db76-4168-800f-537ac2683179" />
+  <img width="751" height="489" alt="Linux-Redis_05" src="https://github.com/user-attachments/assets/71e50f85-db76-4168-800f-537ac2683179" /><br>
 
 ### 2.2.4 Set 类型及操作
 set 是集合，他是 string 类型的无序集合。Set 是通过 hash table 实现的，对集 、交集、差集。通过这些操作我们可以实现社交网站中的好友推荐和blog 的 tag 功能。集合不允许有重复值
-<img width="677" height="421" alt="Linux-Redis_06" src="https://github.com/user-attachments/assets/c68ef319-1e58-4a63-8e95-2179f0d3486b" />
+<img width="677" height="421" alt="Linux-Redis_06" src="https://github.com/user-attachments/assets/c68ef319-1e58-4a63-8e95-2179f0d3486b" /><br>
 - sadd：添加一个或多个元素到集合中
   - redis127.0.0.1:6379>sadd mset 1 2 3 4
 - smembers：获取集合里面所有的元素
@@ -101,7 +101,7 @@ set 是集合，他是 string 类型的无序集合。Set 是通过 hash table �
 
 ### 2.2.5 zset 类型及操作
 zset 是 set 的一个升级版本，它在 set 的基础上增加了一个顺序属性，这一属性在添加修改元素的时候可以指定，每次指定后，zset 会自动重新按新的值调整顺序。可以理解为有两列的 mysql 表，一列存的 value，一列存的顺序。操作中 key 理解为 zset 的名字
-<img width="641" height="438" alt="Linux-Redis_07" src="https://github.com/user-attachments/assets/8c95f87e-cd08-4836-8202-01f40fd5c7c4" />
+<img width="641" height="438" alt="Linux-Redis_07" src="https://github.com/user-attachments/assets/8c95f87e-cd08-4836-8202-01f40fd5c7c4" /><br>
 - zadd：向一个指定的有序集合中添加元素，每一个元素会对应的有一个分数。你可以指定多个分数/成员组合。如果一个指定的成员已经在对应的有序集合中了，那么其分数就会被更新成最新的，并且该成员会重新调整到正确的位置，以确保集合有序。分数的值必须是一个表示数字的字符串
   - redis127.0.0.1:6379>zadd zset 2 zhangsan 1 lisi 1 wangwu
 - zrange：返回有序集合中，指定区间内的成员。其中成员按照 score（分数）值从小到大排序。具有相同 score 值的成员按照字典顺序来排列
@@ -135,7 +135,7 @@ zset 是 set 的一个升级版本，它在 set 的基础上增加了一个顺�
   - 修改配置文件
   - vi /usr/local/redis/etc/redis.conf
     - 找到 requirepass
-    <img width="768" height="760" alt="Linux-Redis_08" src="https://github.com/user-attachments/assets/97edbdb2-1e34-4c5a-b549-b041abcbd86a" />
+    <img width="768" height="760" alt="Linux-Redis_08" src="https://github.com/user-attachments/assets/97edbdb2-1e34-4c5a-b549-b041abcbd86a" /><br>
     - 复制并且黏贴 然后改为 requirepass 密码即可
   - 重启 redis
     - pkill redis
@@ -175,7 +175,7 @@ Redis 是一个支持持久化的内存数据库，也就是说需要经常将�
   - 在 redis.conf 文件中 dir ./定义了数据库文件的存放位置，默认是当前目录。所以每次重启 redis 服务所在的位置不同，将会生成新的 dump.rdb 文件；建议服务器搭建完成时先修改快照文件保存位置
     - vim redis安装路径/etc/redis.conf
       - 找到 dir ./
-      <img width="762" height="734" alt="Linux-Redis_09" src="https://github.com/user-attachments/assets/b8f53e85-ee05-4906-9988-0626c9221747" />
+      <img width="762" height="734" alt="Linux-Redis_09" src="https://github.com/user-attachments/assets/b8f53e85-ee05-4906-9988-0626c9221747" /><br>
       - 把 ./ 修改成要存放的路径
 - append-only file（缩写 aof）
   - 使用AOF 会让你的Redis 更加耐久: 你可以使用不同的持久化策略：每次写的时候备份、每秒备份、无备份。使用默认的每秒备份策略,Redis 的性能依然很好(备份是由后台线程进行处理的,主线程会尽力处理客户端请求),一旦出现故障，你最多丢失 1 秒的数据
@@ -201,16 +201,16 @@ Redis 是一个支持持久化的内存数据库，也就是说需要经常将�
   - cd redis-mysql
   - yum -y install *
 - 配置网站 nginx 并启动 nginx
-  - vim /etc/nginx/nginx.conf
-  <img width="419" height="66" alt="Linux-Redis_10" src="https://github.com/user-attachments/assets/84e478ce-8868-4bf5-b214-c40f8d825323" />
-  - vim /etc/nginx/conf.d/default.conf
-  <img width="770" height="471" alt="Linux-Redis_11" src="https://github.com/user-attachments/assets/71e40b6a-634a-41bc-9091-4cd87d178e9c" />
-  <img width="770" height="471" alt="Linux-Redis_12" src="https://github.com/user-attachments/assets/4d23095a-b469-4f9c-9f80-6f2adf96fce0" />
+  - vim /etc/nginx/nginx.conf<br>
+  <img width="419" height="66" alt="Linux-Redis_10" src="https://github.com/user-attachments/assets/84e478ce-8868-4bf5-b214-c40f8d825323" /><br>
+  - vim /etc/nginx/conf.d/default.conf<br>
+  <img width="770" height="471" alt="Linux-Redis_11" src="https://github.com/user-attachments/assets/71e40b6a-634a-41bc-9091-4cd87d178e9c" /><br>
+  <img width="770" height="471" alt="Linux-Redis_12" src="https://github.com/user-attachments/assets/4d23095a-b469-4f9c-9f80-6f2adf96fce0" /><br>
   - 启动 nginx
   - service nginx start
 - 修改 php-fpm 配置文件
-  - vim /etc/php-fpm.d/www.conf
-  <img width="764" height="209" alt="Linux-Redis_13" src="https://github.com/user-attachments/assets/e7cd6353-305d-41c2-b305-f03a554a8178" />
+  - vim /etc/php-fpm.d/www.conf<br>
+  <img width="764" height="209" alt="Linux-Redis_13" src="https://github.com/user-attachments/assets/e7cd6353-305d-41c2-b305-f03a554a8178" /><br>
 - 启动 php-fpm 和数据库
   - service php-fpm start
   - service mysqld start
@@ -222,7 +222,7 @@ Redis 是一个支持持久化的内存数据库，也就是说需要经常将�
 <? php
 phpinfo();
 ```
-<img width="767" height="417" alt="Linux-Redis_14" src="https://github.com/user-attachments/assets/b079cba5-6501-4405-9fcd-525395f84b8e" />
+<img width="767" height="417" alt="Linux-Redis_14" src="https://github.com/user-attachments/assets/b079cba5-6501-4405-9fcd-525395f84b8e" /><br>
 
 - 安装 redis
   - wget http://download.redis.io/releases/redis-6.0.6.tar.gz
@@ -234,10 +234,10 @@ phpinfo();
   - cp ./redis.conf /usr/local/redis/etc/ # 复制Redis 的配置文件到/usr/local/redis/etc/下，便于管理。
   - vi /usr/local/redis/etc/redis.conf
     - 将文件里的daemonize后面的 no 修改为 yes ，这是设置后台启动
-- 安装提供 php 和 redis 联系的软件
-<img width="768" height="171" alt="Linux-Redis_15" src="https://github.com/user-attachments/assets/29dd9097-877a-45ae-a8ab-82c5821702d2" />
-  - 安装
-  <img width="759" height="331" alt="Linux-Redis_16" src="https://github.com/user-attachments/assets/5c1d5677-3190-450e-8dfa-f488bd34f387" />
+- 安装提供 php 和 redis 联系的软件<br>
+<img width="768" height="171" alt="Linux-Redis_15" src="https://github.com/user-attachments/assets/29dd9097-877a-45ae-a8ab-82c5821702d2" /><br>
+  - 安装<br>
+  <img width="759" height="331" alt="Linux-Redis_16" src="https://github.com/user-attachments/assets/5c1d5677-3190-450e-8dfa-f488bd34f387" /><br>
 - 让 php 支持 redis
   - vim /etc/php.ini
 
