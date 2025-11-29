@@ -1,4 +1,4 @@
-<img width="699" height="367" alt="Linux：虚拟化18" src="https://github.com/user-attachments/assets/9f46f544-9a5c-4d45-a2f1-a418ee4b6539" />- ESXi 安装
+# ESXi 安装
 - VMware EXSI 是一款行业领先，专门构建的裸机 hypervisor
 - ESXI 直接安装在物理服务器上，并将其划分为多个逻辑服务器，即虚拟机
 - 安装版本
