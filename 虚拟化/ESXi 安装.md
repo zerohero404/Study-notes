@@ -14,9 +14,9 @@
   - 初始化<br>
   <img width="700" height="504" alt="Linux：虚拟化7" src="https://github.com/user-attachments/assets/be404ef8-26f7-498e-b99d-b9bd83a28bd3" /><br>
   - 进入到真正的安装界面，点击”enter”继续<br>
-  <img width="620" height="218" alt="Linux：虚拟化8" src="https://github.com/user-attachments/assets/0798daeb-e43b-4f8f-951b-c88ba5214224" />
+  <img width="620" height="218" alt="Linux：虚拟化8" src="https://github.com/user-attachments/assets/0798daeb-e43b-4f8f-951b-c88ba5214224" /><br>
   - 点击”F11″继续<br>
-  <img width="699" height="365" alt="Linux：虚拟化9" src="https://github.com/user-attachments/assets/c1959e43-aa8b-43cd-ad27-ab5934bd5dd1" />
+  <img width="699" height="365" alt="Linux：虚拟化9" src="https://github.com/user-attachments/assets/c1959e43-aa8b-43cd-ad27-ab5934bd5dd1" /><br>
   - 选择安装到哪个硬盘上，注意不要错选成U盘。选择完成之后按”enter”键继续<br>
   <img width="921" height="386" alt="Linux：虚拟化10" src="https://github.com/user-attachments/assets/205d12a1-1ca3-44ad-858b-98f1ef62c0bd" /><br>
   - 确认选择的硬盘，确认之后按”enter”确认<br>
