@@ -8,7 +8,10 @@
     - PAAS 与 POP、IAAS 的区别
     - <img width="657" height="391" alt="Linux：虚拟化30" src="https://github.com/user-attachments/assets/f4754c91-4b3a-4ca7-ba1f-eddc849fb92d" />
   - Docker 设想是交付运行环境如同海运，OS 如同一个货轮，每一个在 OS 基础上的软件都如同一个集装箱，用户可以通过标准化手段自由组装运行环境，同时集装箱的内容可  以由用户自定义，也可以由专业人员制造
-  - Docker 与传统虚拟化对比
+- Docker 与传统虚拟化对比
+- <img width="757" height="423" alt="Linux：虚拟化23" src="https://github.com/user-attachments/assets/b6009d61-1551-4503-bff4-06e5f7ea7c7e" />
+
+
 
 
 
