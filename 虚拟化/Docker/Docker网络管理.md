@@ -1,7 +1,7 @@
 # 1. Docker 网络通讯
 - 通常情况下，Docker使用网桥（Bridge）与 NAT 的网络通信模式
-  - docker 首先会在宿主机创建一个虚拟网桥 docker0,然后有多少个容器就会创建多少个vethx ，然后将 vethx 与相对应容器内部的网卡相连用于通信，各个容器之间的通信通过 docker0 相互通信，容器与外部网络通信通过 docker0 与 宿主机网卡通信
-<img width="730" height="339" alt="Linux：虚拟化36" src="https://github.com/user-attachments/assets/e6adf915-81a2-44e3-9daa-79649a7a2184" />
+  - docker 首先会在宿主机创建一个虚拟网桥 docker0,然后有多少个容器就会创建多少个vethx ，然后将 vethx 与相对应容器内部的网卡相连用于通信，各个容器之间的通信通过 docker0 相互通信，容器与外部网络通信通过 docker0 与 宿主机网卡通信<br>
+<img width="730" height="339" alt="Linux：虚拟化36" src="https://github.com/user-attachments/assets/e6adf915-81a2-44e3-9daa-79649a7a2184" /><br>
 - 容器访问外部网络
   - iptables -t nat -A POSTROUTING -s 172.17.0.0/16 -o docker0 -j MASQUERADE
 - 外部网络访问容器
