@@ -239,7 +239,7 @@ phpinfo();
   <img width="759" height="331" alt="Linux-Redis_16" src="https://github.com/user-attachments/assets/5c1d5677-3190-450e-8dfa-f488bd34f387" /><br>
 - 让 php 支持 redis
   - vim /etc/php.ini<br>
-  <img width="767" height="235" alt="Linux-Redis_17" src="https://github.com/user-attachments/assets/a488b324-0509-4221-87e8-c61ab2fbc5ee" />
+  <img width="767" height="235" alt="Linux-Redis_17" src="https://github.com/user-attachments/assets/a488b324-0509-4221-87e8-c61ab2fbc5ee" /><br>
   - service php-fpm restart
   - 在浏览器输入服务器 IP 地址看看测试页面有没有 redis 这个模块<br>
   <img width="761" height="99" alt="Linux-Redis_18" src="https://github.com/user-attachments/assets/f351069e-272d-4add-8a84-331b9842b68c" /><br>
