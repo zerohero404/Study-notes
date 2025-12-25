@@ -217,9 +217,10 @@
           - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS'；
           - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone（库名）.* TO ‘keystone（用户）’@’%（可连接地址，%代表所有地址都可以连接）’ IDENTIFIED BY ‘KEYSTONE_DBPASS（连接密码）’;
           - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS'；
-        - 生成一个随机值作为管理令牌在初始配置
-          - openssl rand -hex 10:
-          - 将这个字符串记住
+      - 生成一个随机值作为管理令牌在初始配置
+        - openssl rand -hex 10:
+        - 将这个字符串记住
+
 
 
 
