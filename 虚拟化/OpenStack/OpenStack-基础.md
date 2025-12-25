@@ -11,6 +11,8 @@
   - Telemetry (Ceilometer) – 监控
   - Database Service (Trove) – 数据库服务
   - Data Processing (Sahara) – 数据处理
+ 
+
 # 02. OpenStack 组件搭建环境
 - 操作系统
   - CentOs 7
@@ -67,6 +69,7 @@
     - 多块存储用于块存储的底层存储
 
 # 03. Identituy Service (Keystone) 组件
+
 ## 3.1 Identituy Service (Keystone) 说明
 - Keystone 是 OpenStack Identituy Service 的项目名称，是负责身份管理和授权的组件
   - 主要功能：实现用户的身份认证，基于角色的权限管理，及 OpenStack 其他组件的访问地址和安全策略管理
@@ -95,6 +98,7 @@
   - 服务：辖区内要管理的部门
   - 端点：去往具体部门的路径
   - 角色：官位的高低
+
 ## 3.2 Identituy Service (Keystone) 组件之间的沟通
 - 用户查询服务列表认证过程
   - 用户（User）拿着用户名（User）和 密码（Password）找 Keystone 验证
@@ -110,6 +114,55 @@
   - Keystone 验证过后将 Token（令牌）和访问请求发给 Nova（服务）
   - Nova（服务）接收请求后处理请求，然后返回给用户（User）
   - <img width="623" height="420" alt="Linux：虚拟化45" src="https://github.com/user-attachments/assets/6fb66cb5-7494-42db-ac30-9de3b18b2f00" />
+- 组件之间的交互过程
+  - 用户（User）发送验证信息给 Keystone，Keystone返回 Token（令牌）
+  - 用户（User）发送 Token（令牌）和创建虚拟机请求给 Nova（计算服务）
+  - Nova（计算服务）将用户（User）发送的 Token（令牌）返回给 Keystone 验证，Keystone 验证信息回复
+  - Nova（计算服务）在 Keystone 返回信息之后，将 Token（令牌）和镜像请求发送给 Glance（镜像服务）
+  - Glance（镜像服务）把 Nova（计算服务）发送的 Token（令牌）返回给 Keystone 验证，Keystone 验证信息回复
+  - Glance（镜像服务）再将镜像发送给 Nova（计算服务）
+  - Nova（计算服务）收到镜像后再将 Token（令牌）和网络请求信息发送给 Neutron（网络服务）
+  - Neutron（网络服务）把 Nova（计算服务）发送的 Token（令牌）返回给 Keystone 验证，Keystone 验证信息回复
+  - Neutron（网络服务）回复请求给 Nova（计算服务）
+  - Nova（计算服务）回复 Neutron（网络服务）的回复
+  - Neutron（网络服务）回复请求完成给 Nova（计算服务）
+  - Nova（计算服务）回复请求完成给用户（User）
+  - <img width="805" height="621" alt="Linux：虚拟化46" src="https://github.com/user-attachments/assets/f544c9ad-b1ee-48ff-8cae-b035b3d64b4c" />
+- 用户-角色-服务交互
+  - Trnant（租户）里面有各个不同的 User（用户）
+  - 每个 User（用户）可以使用不同的 Role（角色）
+  - 每个 Role（角色）有不同的权限
+  - Role1 可以在 Compute（计算服务）中创建 VM 和绑定网络
+  - Role2 可以在 Compute（计算服务）中绑定卷和在 Network（网络服务）中增加网络
+  - Role3 可以在 Network（网络服务）增加端口和绑定
+  - <img width="739" height="501" alt="Linux：虚拟化47" src="https://github.com/user-attachments/assets/5bc0da4a-d4c2-4038-a8b5-67f6dca4cb22" />
+
+# 3.3 Identituy Service (Keystone)组件安装
+- 在 controller 节点上操作
+  - 关闭 NetworkManager
+    - systemctl stop NetworkManager
+    - systemctl disable NetworkManager
+  - 关闭防火墙
+    - systemctl stop firewalld
+    - systemctl disable firewalld
+  - 设置主机名
+    - hostnamectl set-hostname controller.nice.com
+  - 配置 Dns 服务器或者使用 hosts 进行主机名的 IP 对应
+    - vim /etc/hosts
+      - 添加
+        - 192.168.222.5 controller.nice.com
+        - 192.168.222.6 network.nice.com
+        - 192.168.222.10 compute.nice.com
+        - 192.168.222.20 block.nice.com
+  - 配置时间同步服务器
+    - yum -y install ntp
+    - vim /etc/ntp.conf
+      - 注释
+        - server 0.centos.pool.ntp.org iburst 到 server 3.centos.pool.ntp.org iburst
+      - 添加
+        - server 127.127.1.0<br>
+          fudge 127.127.1.0 stratum 10<br>
+        - <img width="517" height="126" alt="Linux：虚拟化48" src="https://github.com/user-attachments/assets/d8625a9f-ecee-4088-98ef-1c3fb8b8eee9" />
 
 
 
