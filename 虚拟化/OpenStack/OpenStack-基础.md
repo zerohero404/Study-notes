@@ -38,5 +38,30 @@
   - Compute (Nova) – 计算服务
   - Dashboard (Horizon) – 仪表盘
   - Network（网络节点）
-  - Networking (Neutron) – 网络服务
-  - <img width="821" height="501" alt="Linux：虚拟化43" src="https://github.com/user-attachments/assets/3dca5087-3610-4085-b14a-e275a14505ae" />
+  - Networking (Neutron) – 网络服务<br>
+  - <img width="821" height="501" alt="Linux：虚拟化43" src="https://github.com/user-attachments/assets/3dca5087-3610-4085-b14a-e275a14505ae" /><br>
+- 扩展
+  - Contriller（控制节点）在生产环境中应该配置数据库集群
+  - block（存储节点）可以在管理网络中添加多个
+- 实验所需服务器最低配置
+  - Contriller（控制节点）
+    - 两核 CPU
+    - 内存 1.5 GB 以上
+    - 一块网卡
+    - 100GB存储
+  - Compute（实例节点）
+    - MAX CPU
+    - MAX 内存
+    - 两块网卡
+    - 100GB存储
+  - Network（网络节点）
+    - 两核 CPU
+    - 内存 1.5 GB 以上
+    - 三块网卡
+    - 20GB存储
+  - Block（存储节点）
+    - 两核 CPU
+    - 内存 1 GB 以上
+    - 一块网卡
+    - 一个 20 GB 存储用于存放系统文件
+    - 多块存储用于块存储的底层存储
