@@ -1,0 +1,42 @@
+# 01. OpenStack 组件
+- 选用 OpenStack Juno 版本，这个版本有以下的核心组件
+  - Compute (Nova) – 计算服务
+  - Image Service (Glance) – 镜像服务
+  - Object Storage (Swift) – 对象存储
+  - Block Storage (Cinder) – 块存储
+  - Networking (Neutron) – 网络服务
+  - Dashboard (Horizon) – 仪表盘
+  - Identituy Service (Keystone) – 认证服务
+  - Orchestration (Heat) – 编排
+  - Telemetry (Ceilometer) – 监控
+  - Database Service (Trove) – 数据库服务
+  - Data Processing (Sahara) – 数据处理
+# 02. OpenStack 组件搭建环境
+- 操作系统
+  - CentOs 7
+  - 关闭防火墙和 SELinux
+- 安装版本
+  - Juno
+- 安装模块
+  - Compute (Nova) – 计算服务
+  - Image Service (Glance) – 镜像服务
+  - Block Storage (Cinder) – 块存储
+  - Networking (Neutron) – 网络服务
+  - Dashboard (Horizon) – 仪表盘
+  - Identituy Service (Keystone) – 认证服务
+  - Database Service (Trove) – 数据库服务
+  - Data Processing (Sahara) – 数据处理
+- 结构拓扑图
+  - Contriller（控制节点）
+  - Identituy Service (Keystone) – 认证服 务
+  - Image Service (Glance) – 镜像服务
+  - Database Service (Trove) – 数据库服务
+  - Data Processing (Sahara) – 数据处理
+  - Block（存储节点）
+  - Block Storage (Cinder) – 块存储
+  - Compute（实例节点）
+  - Compute (Nova) – 计算服务
+  - Dashboard (Horizon) – 仪表盘
+  - Network（网络节点）
+  - Networking (Neutron) – 网络服务
+  - <img width="821" height="501" alt="Linux：虚拟化43" src="https://github.com/user-attachments/assets/3dca5087-3610-4085-b14a-e275a14505ae" />
