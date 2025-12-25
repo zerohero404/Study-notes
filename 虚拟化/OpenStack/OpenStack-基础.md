@@ -214,12 +214,44 @@
         - 创建keystone数据库
           - MariaDB [(none)]>CREATE DATABASE keystone（库名）; # 创建keystone数据库用户，使其可以对keystone数据库有完全控制权限
           - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone（库名）.* TO ‘keystone（用户）’@’localhost（可连接地址）’ IDENTIFIED BY ‘KEYSTONE_DBPASS（连接密码）’;
-          - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS'；
+            - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS'；
           - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone（库名）.* TO ‘keystone（用户）’@’%（可连接地址，%代表所有地址都可以连接）’ IDENTIFIED BY ‘KEYSTONE_DBPASS（连接密码）’;
-          - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS'；
+            - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS'；
       - 生成一个随机值作为管理令牌在初始配置
         - openssl rand -hex 10:
         - 将这个字符串记住
+      - 安装软件包
+        -yum install openstack-keystone python-keystoneclient
+      - 编辑 /etc/keystone/keystone.conf 文件并作下列修改
+        - vim /etc/keystone/keystone.conf
+        - 修改[DEFAULT]小节，定义初始管理令牌
+        - admin_token = 刚才生成的随机值
+        - <img width="428" height="108" alt="Linux：虚拟化49" src="https://github.com/user-attachments/assets/7313ab9e-089f-4000-8272-3b9a5b778e49" />
+      - 修改[database]小节，配置数据库访问
+        - connection=mysql://keystone（用户名）:123456（密码）@controller.nice.com（连接地址）/keystone（库名）
+        -  <img width="467" height="101" alt="Linux：虚拟化50" src="https://github.com/user-attachments/assets/5953dbb7-e5c6-4533-8b94-d6161e2badc8" />
+          - connection=mysql://keystone:123456@controller.nice.com/keystone
+      - 修改[token]小节，配置UUID提供者和SQL驱动
+        - provider=keystone.token.providers.uuid.Provider
+        - driver=keystone.token.persistence.backends.sql.Token
+        - <img width="450" height="138" alt="Linux：虚拟化51" src="https://github.com/user-attachments/assets/00e881d9-356b-4879-a42c-51483f382af0" />
+      - [DEFAULT] 开启详细日志，协助故障排除
+        - verbose = True
+        - <img width="452" height="61" alt="Linux：虚拟化52" src="https://github.com/user-attachments/assets/d7f90eaf-8152-4f63-bb69-222fbbaf24dd" />
+      - 常见通用证书的密钥，并限制相关文件的访问权限
+        - keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
+        - chown -R keystone:keystone /var/log/keystone
+        - chown -R keystone:keystone /etc/keystone/ssl
+        - chmod -R o-rwx /etc/keystone/ssl
+      - 初始化keystone数据库
+        - su -s /bin/sh -c “keystone-manage db_sync” keystone
+      - 启动identity服务并设置开机启动
+        - systemctl enable openstack-keystone.service
+        - systemctl start openstack-keystone.service
+      - 默认情况下，服务器会无限存储到期的令牌，在资源有限的情况下会严重影响服务器性能。建议用计划任务，每小时删除过期的令牌
+        - (crontab -l -u keystone 2>&1 | grep -q token_flush) || \echo '@hourly /usr/bin/keystone-manage token_flush >/var/log/keystone/keystone-tokenflush.log 2>&1' \>> /var/spool/cron/keystone
+
+
 
 
 
