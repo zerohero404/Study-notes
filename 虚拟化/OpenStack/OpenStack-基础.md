@@ -66,3 +66,64 @@
     - 一个 20 GB 存储用于存放系统文件
     - 多块存储用于块存储的底层存储
 
+# 03. Identituy Service (Keystone) 组件
+## 3.1 Identituy Service (Keystone) 说明
+- Keystone 是 OpenStack Identituy Service 的项目名称，是负责身份管理和授权的组件
+  - 主要功能：实现用户的身份认证，基于角色的权限管理，及 OpenStack 其他组件的访问地址和安全策略管理
+  - Keystone 项目是给 OpenStack 的其他组件（nova，cinder，glance….）提供一个统一的验证方式
+
+- 用户管理
+  - Account 账户
+  - Authentication 身份认证
+  - Authorization 授权
+- 服务目录管理
+  - User（用户）：一个人、系统或服务在 OpenStack 中的数字表示。已经登陆的用户分配令牌环以访问资源。用户可以直接分配给特定的租户，就像隶属于每个组
+  - Credentials（凭证）：用于确认用户身份的数据。例如：用户名和密码，用户名和 API key，或由认证服务提供的身份验证令牌
+  - Authentication（验证）：确认用户身份的过程
+  - Token（令牌）：一个用于访问 OpenStack API 和资源的字母数字字符串。一个临牌可以随时撤销，并且只在一段时间内生效
+  - Trnant（租户）：一个组织或者故里资源的容器。租户可以组织或者隔离认证对象。根据服务运营的要求，一个租户可以映射到客户、账户、组织或项目
+  - Service OpenStack （服务于服务的服务）：它提供了一个或者多个端点，供用户访问资源和执行操作。
+  - Endpoint（端点）：一个用户可以通过网络对某个服务进行访问的地址，通常是一个 URL 地址
+  - Role（角色）：包含特定用户权限和特权的定制化权限集合
+  - Keystone Client（Keystone 命令行工具）：Keystone 的命令行工具。通过这个工具可以创建用户，服务和端点等。
+- 服务目录管理通俗解释
+  - 用户：个人姓名
+  - 凭证：身份证
+  - 验证：检查身份证
+  - 令牌：官印
+  - 租户：管理的辖区
+  - 服务：辖区内要管理的部门
+  - 端点：去往具体部门的路径
+  - 角色：官位的高低
+## 3.2 Identituy Service (Keystone) 组件之间的沟通
+- 用户查询服务列表认证过程
+  - 用户（User）拿着用户名（User）和 密码（Password）找 Keystone 验证
+  - Keystone 验证用户名（User）和 密码（Password）过后，如果正确发 Token（令牌）给用户（User）
+  - 用户（User）不知道服务列表，便将 Token（令牌）和服务列表查询请求发给 Keystone
+  - Keystone 验证 Token（令牌）之后将 Tenant list（服务器列表）发送给用户（User）
+  - <img width="688" height="342" alt="Linux：虚拟化44" src="https://github.com/user-attachments/assets/872b1229-b7c7-4d4b-853f-769c5b747a73" />
+- 用户访问服务认证过程
+  - 用户（User）拿着用户名（User）和 密码（Password）找 Keystone 验证
+  - Keystone 验证用户名（User）和 密码（Password）过后，如果正确发 Token（令牌）和 Endpoint（端点） 给用户（User）
+  - 用户（User）将 Token（令牌）和访问请求给 Endpoint（端点）
+  - Endpoint（端点）将 用户（User）发过来的 Token（令牌）和访问请求发给 Keystone 验证
+  - Keystone 验证过后将 Token（令牌）和访问请求发给 Nova（服务）
+  - Nova（服务）接收请求后处理请求，然后返回给用户（User）
+  - <img width="623" height="420" alt="Linux：虚拟化45" src="https://github.com/user-attachments/assets/6fb66cb5-7494-42db-ac30-9de3b18b2f00" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
