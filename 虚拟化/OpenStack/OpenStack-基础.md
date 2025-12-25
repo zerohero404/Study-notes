@@ -163,7 +163,63 @@
         - server 127.127.1.0<br>
           fudge 127.127.1.0 stratum 10<br>
         - <img width="517" height="126" alt="Linux：虚拟化48" src="https://github.com/user-attachments/assets/d8625a9f-ecee-4088-98ef-1c3fb8b8eee9" />
+      - 取消注释并且修改
+        -restrict 192.168.222.0（OpenStack 管理网络网段） mask 255.255.255.0 nomodify notrap
 
+- 安装 OpenStack 预备包
+  - 安装 yum-plugin-priorities 包，防止高优先级软件被低优先级软件覆盖
+    - yum -y install yum-plugin-priorities
+  - 安装 epel 扩展 YUM 源
+    - yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
+  - 安装 OpenStack YUM 源
+    - yum -y install http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm
+  - 更新操作系统
+    - yum -y upgrade
+  - 安装 OpenStack-selinux 自动管理 Selinux
+    - yum -y install openstack-selinux
+    - 也可以关闭 selinux，不安装这个软件
+  - 安装 mariadb 软件包
+    - yum -y install mariadb mariadb-server MySQL-python
+    - 编辑 /etc/my.cnf 设置绑定 IP，默认数据库引擎及默认字符集为 UTF-8
+    - vim /etc/my.cnf
+      - 在 [mysql] 标签下添加
+          - bind-address = 192.168.222.5（controller 节点 IP）<br>
+            default-storage-engine = innodb<br>
+            innodb_file_per_table<br>
+            collation-server = utf8_general_ci<br>
+            init-connect = ‘SET NAMES utf8’<br>
+            character-set-server = utf8<br>
+  - 启动数据库并设置为开机自启动
+    - systemctl enable mariadb
+    - systemctl start mariadb
+  - 初始化数据库脚本
+    - mysql_secure_installation
+  - 安装 Messaing Server 服务
+    - Messaing Server 服务简介
+      - 功能：协调操作和状态信息服务
+      - 常用的消息代理软件
+        - RabbitMQ（推荐）
+        - Qpid
+        - ZeroMQ
+    - 安装 RabbitMQ 软件包
+      - yum -y install rabbitmq-server
+    - 启动服务并设置开机自启动
+      - systemctl enable rabbitmq-server
+      - systemctl start rabbitmq-server
+    - rabbitmq 默认用户名和密码是 guest，可以通过下列命令修改
+      - rabbitmqctl change_password guest new_password 然后输入新密码
+    - 安装和配置认证服务
+      - 登录mysql数据库
+        - mysql -u root -p
+        - 创建keystone数据库
+          - MariaDB [(none)]>CREATE DATABASE keystone（库名）; # 创建keystone数据库用户，使其可以对keystone数据库有完全控制权限
+          - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone（库名）.* TO ‘keystone（用户）’@’localhost（可连接地址）’ IDENTIFIED BY ‘KEYSTONE_DBPASS（连接密码）’;
+          - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS'；
+          - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone（库名）.* TO ‘keystone（用户）’@’%（可连接地址，%代表所有地址都可以连接）’ IDENTIFIED BY ‘KEYSTONE_DBPASS（连接密码）’;
+          - MariaDB [(none)]>GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS'；
+        - 生成一个随机值作为管理令牌在初始配置
+          - openssl rand -hex 10:
+          - 将这个字符串记住
 
 
 
